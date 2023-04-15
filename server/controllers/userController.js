@@ -1,11 +1,11 @@
 // import {db, Table} from "../db.config.js"
 // import { Module } from "module";
 const bcrypt = require('bcrypt');
-const { db, Table } = require('../db.config.js')
+const { db, Users } = require('../db.config.js')
 
 const createUser =  (req,res,next) => {
     //Set TableName
-    const TableName = Table;
+    const TableName = Users;
     //Pull in username and password from the body
     const { username, password } = req.body;
     //Bcrypt password
@@ -54,7 +54,7 @@ const createUser =  (req,res,next) => {
 }
 
 const verifyUser = async (req,res, next) => {
-    const TableName = Table;
+    const TableName = Users;
     const { username, password } = req.body;
     const Key = { ['user_id']: username }
     console.log(username, password,TableName);

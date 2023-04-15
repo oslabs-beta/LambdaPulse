@@ -2,6 +2,7 @@ const express = require("express"),
 PORT = 3000,
 app = express();
 const userController = require( './controllers/userController');
+const redisController = require('./controllers/redisController')
 // import express from "express";
 // const PORT = 3000,
 // app = express();
@@ -29,6 +30,26 @@ app.get("/verifyUser", userController.verifyUser, (req,res) => {
     // res.redirect('homepage');
     res.sendStatus(200);
 });
+
+app.post("/setLogs", redisController.setLogs, (req,res) => {
+    //successful login
+    // res.redirect('homepage');
+    res.sendStatus(200);
+});
+
+app.get("/getLogs", redisController.getLogs, (req,res) => {
+    //successful login
+    // res.redirect('homepage');
+    res.status(200).json(res.locals.logs);
+});
+app.get("/getErrLogs", redisController.getErrLogs, (req,res) => {
+    //successful login
+    // res.redirect('homepage');
+    res.status(200).json(res.locals.logs);
+});
+
+//Route not found
+app.use((req,res) => res.sendStatus(404));
 
 //Global error handler
 app.use((err, req, res, next) => {
