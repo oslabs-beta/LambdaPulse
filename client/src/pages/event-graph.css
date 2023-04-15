@@ -1,0 +1,9 @@
+.EventPanelContainer {
+  display: flex;
+  background-color: #fafafa;
+}
+
+.LogPanel {
+  background-color: #f0f0f0;
+  width: 33%;
+}
