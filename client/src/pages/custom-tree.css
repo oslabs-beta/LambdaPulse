@@ -1,0 +1,37 @@
+/* custom-tree.css */
+
+.node__root > circle {
+  fill: red;
+}
+  
+.node__branch > circle {
+  fill: yellow;
+}
+
+.node__leaf > circle {
+  fill: green;
+  r: 5;
+}
+
+.link__to-branch {
+  stroke-width: 1;
+}
+
+.node__detail {
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: lightgray;
+  top: 40px;
+  left: 40px;
+  position: absolute;
+  display: inline;
+}
+
+.log__list {
+  background-color: lightgray;
+  margin: 20px;
+}

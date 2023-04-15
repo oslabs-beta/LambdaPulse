@@ -21,6 +21,7 @@ app.get("/api", (req,res) => {
     res.status(200).json(data);
 });
 
+
 app.post("/createUser", userController.createUser, (req,res) => {
     res.sendStatus(200);
 })
