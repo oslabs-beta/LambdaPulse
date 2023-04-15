@@ -64,7 +64,15 @@ const orgChart = {
     }
 
     const handleClick = (e) => {
+      
+    }
+
+    const handleMouseEnter = (e) => {
       props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'inline'});
+    }
+
+    const handleMouseLeave = (e) => {
+      props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'none'});
     }
 
     
@@ -82,7 +90,11 @@ const orgChart = {
         <circle r="16" fill={nodeDatum.color} 
             strokeWidth="0"
             onClick={(e) => handleClick(e)}/>
-        <image x="-16" y="-16" width="32" height="32" href={getIcon(nodeDatum.icon)} onClick={(e) => handleClick(e)}/>
+        <image x="-16" y="-16" width="32" height="32" 
+          href={getIcon(nodeDatum.icon)} onClick={(e) => handleClick(e)}
+            onMouseEnter={(e) => handleMouseEnter(e)}
+            onMouseLeave={(e) => handleMouseLeave(e)}
+            />
         <text stroke="gray" strokeWidth="1" x="-50" y="40" fontSize="x-small">
         {nodeDatum.name}
         </text>
