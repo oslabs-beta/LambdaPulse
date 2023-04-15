@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import NodeTree from './NodeTree';
 import NodeDetail from './NodeDetail';
 import LogPanel from './LogPanel';
+import NavBar from './NavBar';
+import LeftBar from './LeftBar';
 import './event-graph.css';
 
 const sampleData = {
@@ -55,9 +57,10 @@ const EventGraph = (props) => {
   const [logData,setLogData] = useState({logs:['LogX','LogY','LogZ']})
 
   return (
-    <div >
-      <h1>Event Flow</h1>
+    <div className='EventGraph' >
+      <NavBar />
       <div className='EventPanelContainer'>
+        <LeftBar />
         <NodeTree setNds={setNodeDetailState} setLData={setLogData} nData={nodeData} />
         <LogPanel lData={logData}/>
       </div>

@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import NavBar from './NavBar';
+import './event-graph.css'
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -11,6 +13,7 @@ const Login = () => {
     }
     return (
         <div>
+            <NavBar />
             <p>Welcome!</p>
             <form onSubmit={(e) => {
                 e.preventDefault();

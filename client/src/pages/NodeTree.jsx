@@ -45,7 +45,7 @@ const NodeTree = (props) => {
           strokeWidth="0"
           onClick={(e) => handleClick(e,nodeDatum.logs)}
           />
-      <circle r="19" fill='white' 
+      <circle r="19" fill='#191919' 
           strokeWidth="0"
           onClick={(e) => handleClick(e,nodeDatum.logs)}
           />
@@ -81,6 +81,13 @@ const NodeTree = (props) => {
               allowForeignObjects={true}
               renderCustomNodeElement={renderRectSvgNode}
               nodeSize={nodeSize}
+              styles={{
+                links: {
+                     
+                      stroke: 'red',
+                      strokeWidth: "2px",
+                    },
+             }}
               
       />
       

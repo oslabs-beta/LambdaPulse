@@ -1,9 +1,27 @@
+.EventGraph {
+  width: 100%;
+}
+
 .EventPanelContainer {
   display: flex;
-  background-color: #fafafa;
+  background-color: #252525;
 }
 
 .LogPanel {
-  background-color: #f0f0f0;
+  background-color: #191919;
+  color: #dddddd;
   width: 33%;
+}
+
+.NavBar {
+  background-color: #191919;
+  height: 3em;
+  width: 100%;
+  align-items: left;
+  text-align: left;
+}
+
+.LeftBar {
+  background-color: #191919;
+  width: 2em;
 }
