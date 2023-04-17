@@ -8,6 +8,8 @@ import './event-graph.css';
 import main from './sortingSegments.js';
 
 
+
+
 const EventGraph = (props) => {
 
 
@@ -46,13 +48,37 @@ const EventGraph = (props) => {
   ];
   const testData = main(realData);
 
+  useEffect(() => {
+
+    fetch('/api')
+    .then(data => data.json())
+    .then(res => {
+        console.log(res);
+    });
+
+
+    fetch('/getTraces',
+      {
+        method: 'POST',
+        headers: {
+          'Content-type':'application/json'
+        },
+        body: {
+          "userRoleArn": "arn:aws:iam::263792328682:role/LambdawgDelegationRole"
+        }
+      })
+      .then(result => result.json())
+      .then(data => console.log('Fetched ',data))
+      .catch(err => console.log(err))
+  },[]);
+
 
 
   const [nodeDetailState,setNodeDetailState] = useState({left: 150, top:150, display: 'none', curNode: testData});
   const [nodeData,setNodeData] = useState(testData)
   const [logData,setLogData] = useState({logs:['LogX','LogY','LogZ']})
 
-  console.log(testData);
+  //console.log(testData);
 
   
 

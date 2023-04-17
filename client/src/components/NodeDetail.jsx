@@ -7,7 +7,7 @@ const NodeDetail = (props) => {
 
   const attributes = [];
   for (const k in props.nds.curNode) {
-    attributes.push(<div><b>{k + ': '}</b>{'' +  props.nds.curNode[k]}</div>)
+    attributes.push(<div key={'nds' + Math.random()}><b>{k + ': '}</b>{'' +  props.nds.curNode[k]}</div>)
   }
 
   return (

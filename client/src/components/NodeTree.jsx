@@ -78,9 +78,9 @@ const NodeTree = (props) => {
   </g>
   );
 
-  const initialTranslate = {x:400, y:200};
+  const initialTranslate = {x:400, y:100};
   const textLayout = {textAnchor: "start", x: 10, y: 50, transform: undefined }
-  const nodeSize = {x:160, y:80};
+  const nodeSize = {x:160+40, y:80};
 
   return (
     // `<Tree />` will fill width/height of its container; in this case `#treeWrapper`.
