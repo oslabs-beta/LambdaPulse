@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
-import NavBar from './NavBar';
-import './event-graph.css'
+import { useNavigate } from 'react-router-dom';
+import NavBar from '../components/NavBar';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const verifyLogin = (e) => {
         fetch('/api')
         .then(data => data.json())
-        .then(res => console.log(res));
+        .then(res => {
+            console.log(res);
+            navigate('/dashboard');
+        });
     }
     return (
         <div>

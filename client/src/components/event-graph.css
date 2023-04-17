@@ -1,8 +1,11 @@
 .EventGraph {
   width: 100%;
+  display:flex;
+  justify-content: space-between;
 }
 
 .EventPanelContainer {
+  width:67%;
   display: flex;
   background-color: #252525;
 }
@@ -11,17 +14,9 @@
   background-color: #191919;
   color: #dddddd;
   width: 33%;
+  position:relative;
+  right:0px;
+  height: 100vh;
 }
 
-.NavBar {
-  background-color: #191919;
-  height: 3em;
-  width: 100%;
-  align-items: left;
-  text-align: left;
-}
 
-.LeftBar {
-  background-color: #191919;
-  width: 2em;
-}

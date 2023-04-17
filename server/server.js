@@ -4,6 +4,7 @@ const express = require('express'),
 const userController = require('./controllers/userController');
 const redisController = require('./controllers/redisController');
 const awsCredentialsController = require('./controllers/awsCredentialsController');
+const getTraceMiddleware = require('./aws_sdk/traceDetails');
 
 // import express from "express";
 // const PORT = 3000,
@@ -35,10 +36,11 @@ app.post('/setLogs', redisController.setLogs, (req, res) => {
   res.sendStatus(200);
 });
 app.post(
-  '/getTempCredentials',
+  '/getTraces',
   awsCredentialsController.getCredentials,
+  getTraceMiddleware.getSummary,getTraceMiddleware.getSegmentArray,getTraceMiddleware.sortSegments,
   (req, res) => {
-    res.status(200).json(res.locals.awsCredentials);
+    res.status(200).json(res.locals.nodes);
   }
 );
 

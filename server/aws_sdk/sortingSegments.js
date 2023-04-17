@@ -90,7 +90,7 @@ const realData = [
   },
 ];
 
-console.log(realData);
+// console.log(realData);
 
 // parseJSON in Document
 const parseData = (segmentArray) => {
@@ -195,4 +195,4 @@ const main = (segment) => {
   return root;
 };
 
-export default main;
+module.exports = main;

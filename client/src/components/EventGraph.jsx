@@ -57,16 +57,16 @@ const EventGraph = (props) => {
   
 
   return (
-    <div className='EventGraph' >
-      <NavBar />
-      <div className='EventPanelContainer'>
-        <LeftBar />
-        <NodeTree setNds={setNodeDetailState} setLData={setLogData} nData={nodeData} />
+    <div>
+      <div className='EventGraph'>
+        <div className='EventPanelContainer'>
+          <NodeTree setNds={setNodeDetailState} setLData={setLogData} nData={nodeData} />
+          <NodeDetail nds={nodeDetailState} />
+        </div>
         <LogPanel lData={logData}/>
       </div>
-      <NodeDetail nds={nodeDetailState} />
-      
-      <h2>test</h2>
+
+
     </div>
   )
 };
