@@ -90,7 +90,7 @@ const realData = [
   },
 ];
 
-console.log(realData);
+// console.log(realData);
 
 // parseJSON in Document
 const parseData = (segmentArray) => {

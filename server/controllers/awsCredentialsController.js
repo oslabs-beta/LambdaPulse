@@ -22,7 +22,7 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
       secretAccessKey: data.Credentials.SecretAccessKey,
       sessionToken: data.Credentials.SessionToken,
     };
-
+    console.log('in awsCredentialsController')
     res.locals.awsCredentials = temporaryCredentials;
     return next();
   } catch (err) {
