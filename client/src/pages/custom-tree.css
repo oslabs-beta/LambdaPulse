@@ -1,15 +1,18 @@
 /* custom-tree.css */
 
+svg g .rd3t-link {
+  stroke: #999;
+}
 
 .link__to-branch {
-  stroke-width: 5;
+  stroke-width: 1;
   stroke: #f0f;
   border-color: #dddddd;
   color: #dddddd;
 }
 
 .link__to-leaf {
-  stroke-width: 5;
+  stroke-width: 1;
   stroke: #f0f;
   border-color: #dddddd;
   color: #dddddd;

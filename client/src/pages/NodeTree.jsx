@@ -57,7 +57,7 @@ const NodeTree = (props) => {
           onMouseEnter={(e) => handleMouseEnter(e)}
           onMouseLeave={(e) => handleMouseLeave(e)}
           />
-      <text stroke="gray" strokeWidth="1" x="-50" y="40" fontSize="x-small">
+      <text stroke="#dddddd" strokeWidth="1" x="-50" y="40" fontSize="x-small">
       {nodeDatum.name}
       </text>
   </g>
