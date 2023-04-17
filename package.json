@@ -12,7 +12,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
+    "@aws-sdk/client-xray": "^3.312.0",
     "aws-sdk": "^2.1354.0",
     "bcrypt": "^5.1.0",
     "concurrently": "^8.0.1",
