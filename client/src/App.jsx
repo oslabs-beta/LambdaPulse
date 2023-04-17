@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import Login from './pages/Login';
-import EventGraph from './pages/EventGraph';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<Login/>}/>
-      <Route path='/eventgraph' element={<EventGraph/>}/>
+      <Route path='/dashboard' element = {<Dashboard/>}/>
       {/* <Route path='/' element={<Login/>}/> */}
     </Routes>
     )

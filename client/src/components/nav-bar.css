@@ -1,0 +1,18 @@
+.NavBar{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-style: inset;
+    border-color:rgb(255, 106, 0);
+    border-width: 3px;
+}
+#logo{
+    display:flex;
+}
+#links{
+    position:relative;
+    top: 35px;
+    display:flex;
+    justify-content: space-around;
+    width:200px;
+}

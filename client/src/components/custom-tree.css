@@ -1,0 +1,39 @@
+/* custom-tree.css */
+
+svg g .rd3t-link {
+  stroke: #999;
+}
+
+.link__to-branch {
+  stroke-width: 1;
+  stroke: #f0f;
+  border-color: #dddddd;
+  color: #dddddd;
+}
+
+.link__to-leaf {
+  stroke-width: 1;
+  stroke: #f0f;
+  border-color: #dddddd;
+  color: #dddddd;
+}
+
+.node__detail {
+  width: 200px;
+  height: 200px;
+  color: #dddddd;
+  background-color: #191919;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: #777777;
+  top: 40px;
+  left: 40px;
+  position: absolute;
+  display: inline;
+}
+
+.log__list {
+  background-color: #666666;
+  margin: 20px;
+}

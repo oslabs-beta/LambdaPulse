@@ -1,0 +1,22 @@
+.EventGraph {
+  width: 100%;
+  display:flex;
+  justify-content: space-between;
+}
+
+.EventPanelContainer {
+  width:67%;
+  display: flex;
+  background-color: #252525;
+}
+
+.LogPanel {
+  background-color: #191919;
+  color: #dddddd;
+  width: 33%;
+  position:relative;
+  right:0px;
+  height: 100vh;
+}
+
+
