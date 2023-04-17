@@ -3,6 +3,7 @@ import Tree from 'react-d3-tree';
 import dynamoDBIcon from '../assets/dynamoDB.svg'
 import lambdaFuncIcon from '../assets/lambdaFunc.svg'
 import simpleNotificationIcon from '../assets/simpleNotification.svg'
+import apiGatewayEndpointIcon from '../assets/apigatewayendpoint.svg'
 import rs from '../assets/react.svg'
 import './custom-tree.css';
 
@@ -19,10 +20,24 @@ const NodeTree = (props) => {
     };
   
   const getIcon = (nType) => {
-    if (nType == 'lambdaFunc') return lambdaFuncIcon;
-    else if (nType == 'dynamoDB') return dynamoDBIcon;
+    if (nType == 'AWS::Lambda') return lambdaFuncIcon;
+    else if (nType == 'AWS::Lambda::Function') return lambdaFuncIcon;
+    else if (nType == 'AWS::DynamoDB::Table') return dynamoDBIcon;
+    else if (nType == 'AWS::ApiGateway::Stage') return apiGatewayEndpointIcon;
     else if (nType == 'simpleNotification') return simpleNotificationIcon;
-    else return rs;
+    else {
+      console.log('Got unknown origin: ' + nType)
+      return rs;
+    }
+  }
+
+  const getColor = (nType) => {
+    if (nType == 'AWS::Lambda') return 'orange';
+    else if (nType == 'AWS::Lambda::Function') return 'red';
+    else if (nType == 'AWS::DynamoDB::Table') return 'blue';
+    else if (nType == 'AWS::ApiGateway::Stage') return '#4D27AA';
+    else if (nType == 'simpleNotification') return 'pink';
+    else return 'gray';
   }
 
   const handleClick = (e,logs) => {
@@ -49,11 +64,11 @@ const NodeTree = (props) => {
           strokeWidth="0"
           onClick={(e) => handleClick(e,nodeDatum.logs)}
           />
-      <circle r="16" fill={nodeDatum.color} 
+      <circle r="16" fill={getColor(nodeDatum.origin)} 
           strokeWidth="0"
           onClick={(e) => handleClick(e,nodeDatum.logs)}/>
       <image x="-16" y="-16" width="32" height="32" 
-        href={getIcon(nodeDatum.icon)} onClick={(e) => handleClick(e,nodeDatum.logs)}
+        href={getIcon(nodeDatum.origin)} onClick={(e) => handleClick(e,nodeDatum.logs)}
           onMouseEnter={(e) => handleMouseEnter(e)}
           onMouseLeave={(e) => handleMouseLeave(e)}
           />
