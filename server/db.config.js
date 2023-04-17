@@ -2,18 +2,32 @@
 require('dotenv').config();
 // console.log(process.env.AWS_ACCESS_KEY_ID)
 // console.log(process.env.AWS_SECRET_ACCESS_KEY)
-const AWS = require('aws-sdk');
+// const AWS = require('aws-sdk');
+const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+const { DynamoDBDocument } = require('@aws-sdk/lib-dynamodb');
+const { STSClient } = require('@aws-sdk/client-sts');
+
 // import { Module } from 'module';
 // const awsconfig = new AWS.Config({
-    AWS.config.update({
-    region: 'us-east-2',
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    
-})
 
-const db = new AWS.DynamoDB.DocumentClient();
-const dynamodb = new AWS.DynamoDB();
+// AWS.config.update({
+//   region: 'us-east-1',
+//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+// });
+
+const region = 'us-east-2';
+const credentials = {
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+};
+
+// const db = new AWS.DynamoDB.DocumentClient();
+// const dynamodb = new AWS.DynamoDB();
+const dynamoDBClient = new DynamoDBClient({ region, credentials });
+const db = DynamoDBDocument.from(dynamoDBClient);
+const stsClient = new STSClient({ region, credentials });
+
 const Users = 'Users';
 const Logs = 'Logs';
 /*
@@ -98,10 +112,9 @@ dynamodb.describeTable(describeTableParamsLogs, function(err,data) {
 });
 */
 
-
-
 module.exports = {
-    db,
-    Users,
-    Logs
-}  
+  db,
+  Users,
+  Logs,
+  stsClient,
+};
