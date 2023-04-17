@@ -195,4 +195,4 @@ const main = (segment) => {
   return root;
 };
 
-export default main;
+module.exports = main;

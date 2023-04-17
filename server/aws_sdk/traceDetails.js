@@ -1,19 +1,22 @@
-import {
+require('dotenv').config();
+
+const {
   XRayClient,
   GetTraceSummariesCommand,
   BatchGetTracesCommand,
-} from '@aws-sdk/client-xray';
+} = require('@aws-sdk/client-xray');
 
-import main from './sortingSegments';
+const main = require('./sortingSegments');
 
 const awsCredentials = {
-  accessKeyId: 'AKIAT22Z7P7VOTQVL6WR',
-  secretAccessKey: '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',
-  region: 'us-east-1',
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
 };
 
-process.env.AWS_ACCESS_KEY_ID = awsCredentials.accessKeyId;
-process.env.AWS_SECRET_ACCESS_KEY = awsCredentials.secretAccessKey;
+// only needed if issues with aws cli
+// process.env.AWS_ACCESS_KEY_ID = awsCredentials.accessKeyId;
+// process.env.AWS_SECRET_ACCESS_KEY = awsCredentials.secretAccessKey;
 
 const xClient = new XRayClient(awsCredentials);
 
@@ -112,4 +115,4 @@ const getTraceMiddleware = {
   },
 };
 
-export default getTraceMiddleware;
+module.exports = getTraceMiddleware;
