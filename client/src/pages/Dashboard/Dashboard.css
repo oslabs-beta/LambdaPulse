@@ -1,0 +1,18 @@
+#dashboardBody {
+    display:flex;
+}
+#sideBar {
+    width:200px;
+    display:flex;
+    flex-direction: column;
+    border-style: inset;
+    border-color:rgb(255, 106, 0);
+    border-width: 3px;
+}
+#bodyContent{
+    width:100%;
+    background-color:red;
+    border-style: inset;
+    border-color:rgb(255, 106, 0);
+    border-width: 3px;
+}

@@ -3,8 +3,9 @@ import './event-graph.css';
 
 const LeftBar = (props) => {
   return (
-    <div className='LeftBar'>
-      
+    <div className='LeftBar' display ={"flex"}>
+      <p>Home</p>
+      <p>EventGraph</p>
     </div>
   )
 };
