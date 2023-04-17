@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import './custom-tree.css';
 
+
+
 const NodeDetail = (props) => {
+
+  const attributes = [];
+  for (const k in props.nds.curNode) {
+    attributes.push(<div><b>{k + ': '}</b>{'' +  props.nds.curNode[k]}</div>)
+  }
+
   return (
     <div className='node__detail' style={props.nds}>
-      <h3>Name goes here</h3>
+      <h3>{props.nds.curNode ? props.nds.curNode.name : 'n/a'}</h3>
       <div className='log__list'>
-        <div>Log #1</div>
-        <div>Log #2</div>
-        <div>Log #3</div>
+        {attributes}
       </div>
     </div>
   )

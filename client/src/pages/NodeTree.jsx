@@ -44,12 +44,12 @@ const NodeTree = (props) => {
     props.setLData({logs:logs});
   }
 
-  const handleMouseEnter = (e) => {
-    props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'inline'});
+  const handleMouseEnter = (e,curNode) => {
+    props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'inline', curNode: curNode});
   }
 
   const handleMouseLeave = (e) => {
-    props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'none'});
+    props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'none', curNode: null});
   }
 
   
@@ -69,7 +69,7 @@ const NodeTree = (props) => {
           onClick={(e) => handleClick(e,nodeDatum.logs)}/>
       <image x="-16" y="-16" width="32" height="32" 
         href={getIcon(nodeDatum.origin)} onClick={(e) => handleClick(e,nodeDatum.logs)}
-          onMouseEnter={(e) => handleMouseEnter(e)}
+          onMouseEnter={(e) => handleMouseEnter(e, nodeDatum)}
           onMouseLeave={(e) => handleMouseLeave(e)}
           />
       <text stroke="#dddddd" strokeWidth="1" x="-50" y="40" fontSize="x-small">

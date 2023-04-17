@@ -7,50 +7,6 @@ import LeftBar from './LeftBar';
 import './event-graph.css';
 import main from './sortingSegments.js';
 
-const sampleData = {
-  name: 'GetSharedUnicorn',
-  color: "orange",
-  icon: 'lambdaFunc',
-  logs: ['LogA','LogB','LogC'],
-  children: [
-      {
-      name: 'sharedUnicorns',
-      color: "blue",
-      icon: 'dynamoDB',
-      logs: ['LogD','LogE','LogF'],
-      attributes: {
-          department: 'Fabrication',
-      },
-      children: [],
-      },
-      {
-      name: 'wildrydes-prod-unicornDispatched',
-      color: 'pink',
-      icon: 'simpleNotification',
-      logs: ['LogG','LogH','LogI'],
-      attributes: {
-          department: 'Assembly',
-      },
-      children: [
-          {
-          name: 'wildrydes-prod-uploadReceipt',
-          color: "orange",
-          icon: 'lambdaFunc',
-          logs: ['LogJ','LogK','LogL'],
-          children: []
-          },
-          {
-          name: 'wildrydes-prod-recordRide',
-          color: "orange",
-          icon: 'lambdaFunc',
-          logs: ['LogM','LogN','LogO'],
-          children: []
-          },
-      ],
-      },
-  ],
-};
-
 
 const EventGraph = (props) => {
 
@@ -92,7 +48,7 @@ const EventGraph = (props) => {
 
 
 
-  const [nodeDetailState,setNodeDetailState] = useState({left: 150, top:150, display: 'none'});
+  const [nodeDetailState,setNodeDetailState] = useState({left: 150, top:150, display: 'none', curNode: testData});
   const [nodeData,setNodeData] = useState(testData)
   const [logData,setLogData] = useState({logs:['LogX','LogY','LogZ']})
 
