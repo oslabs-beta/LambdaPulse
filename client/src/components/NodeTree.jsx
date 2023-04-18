@@ -5,6 +5,7 @@ import lambdaFuncIcon from '../assets/lambdaFunc.svg'
 import simpleNotificationIcon from '../assets/simpleNotification.svg'
 import apiGatewayEndpointIcon from '../assets/apigatewayendpoint.svg'
 import sesIcon from '../assets/sesIcon.svg'
+import errorIcon from '../assets/error-905.svg'
 import rs from '../assets/react.svg'
 import './custom-tree.css';
 
@@ -27,6 +28,7 @@ const NodeTree = (props) => {
     else if (nType == 'AWS::ApiGateway::Stage') return apiGatewayEndpointIcon;
     else if (nType == 'AWS::SES') return sesIcon;
     else if (nType == 'simpleNotification') return simpleNotificationIcon;
+    else if (nType == 'thrownError') return errorIcon;
     else {
       console.log('Got unknown origin: ' + nType)
       return rs;
@@ -40,6 +42,7 @@ const NodeTree = (props) => {
     else if (nType == 'AWS::ApiGateway::Stage') return '#4D27AA';
     else if (nType == 'AWS::SES') return 'blue';
     else if (nType == 'simpleNotification') return 'pink';
+    else if (nType == 'thrownError') return 'gray';
     else return 'gray';
   }
 
@@ -81,14 +84,28 @@ const NodeTree = (props) => {
   </g>
   );
 
-  const initialTranslate = {x:400, y:100};
+  const initialTranslate = {x:300, y:100};
   const textLayout = {textAnchor: "start", x: 10, y: 50, transform: undefined }
   const nodeSize = {x:160+40, y:80};
+
+  let nodeData;
+  if (!props.nData) {
+    nodeData = {
+      children: [],
+      http: {request: {}, response: {}},
+      id: "abc123",
+      name: "no-traces-found",
+      origin: "thrownError",
+      parent_id: undefined,
+      subsegments: [{}]}
+  }
+  else nodeData = props.nData;
+
 
   return (
     // `<Tree />` will fill width/height of its container; in this case `#treeWrapper`.
     <div id="treeWrapper" style={{ width: '50em', height: '50em' }}>
-      <Tree data={props.nData}
+      <Tree data={nodeData}
               orientation={"vertical"}
               pathClassFunc={getDynamicPathClass}
               onClick={() => console.log('yoooo')}  //not working

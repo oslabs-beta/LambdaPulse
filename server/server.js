@@ -45,19 +45,6 @@ app.post('/setLogs', redisController.setLogs, (req, res) => {
   res.sendStatus(200);
 });
 
-const testController = async (req, res, next) => {
-  console.log('we made it this far...');
-  return next();
-}
-
-
-app.get(
-  '/blahblah',
-  (req,res) => {
-    res.status(200).json({status:'ok'})
-  }
-);
-
 app.get(
   '/getTraces',
   awsCredentialsController.getCredentials,
