@@ -6,6 +6,14 @@ import TraceList from '../../components/TraceList'
 import { Route, Routes } from 'react-router-dom';
 import './Dashboard.css'
 import LeftBar from '../../components/LeftBar';
+import sampleTraces from '../../assets/sampleTraces.json'
+
+import homeIcon from '../../assets/home-1391-svgrepo-com.svg'
+import eventGraphIcon from '../../assets/network-2-1118-svgrepo-com.svg'
+import traceListIcon from '../../assets/list-svgrepo-com.svg'
+import metricsIcon from '../../assets/chart-bar-svgrepo-com.svg'
+import teamIcon from '../../assets/team-svgrepo-com.svg'
+import settingsIcon from '../../assets/settings-svgrepo-com.svg'
 
 const Dashboard = () => {
     const [currentPage,setCurrentPage] = useState("Home");
@@ -24,8 +32,15 @@ const Dashboard = () => {
           .then(result => result.json())
           .then(data => {
             console.log('Fetched ',data)
-            setNodeData(data[currentTrace]);
-            setTraceList(data);
+            if (data.length) {
+              setNodeData(data[currentTrace]);
+              setTraceList(data);
+            }
+            else {
+              console.log('Fetched nothing, defaulting to placeholder data')
+              setNodeData(sampleTraces[currentTrace]);
+              setTraceList(sampleTraces);
+            }
           })
           .catch(err => console.log(err))
       },[currentTrace]);
@@ -45,12 +60,12 @@ const Dashboard = () => {
             <NavBar />
             <div id='dashboardBody'>
                 <div id='sideBar'>
-                    <button onClick={()=>setCurrentPage("Home")}>Home</button>
-                    <button onClick={()=>setCurrentPage("EventGraph")}>Event Graph</button>
-                    <button onClick={()=>setCurrentPage("TraceList")}>Trace List</button>
-                    <button>Metrics Stretch</button>
-                    <button>Manage Team Stretch</button>
-                    <button>Settings Stretch</button>
+                    <button onClick={()=>setCurrentPage("Home")}><img src={homeIcon} width='16px'></img></button>
+                    <button onClick={()=>setCurrentPage("EventGraph")}><img src={eventGraphIcon} width='16px'></img></button>
+                    <button onClick={()=>setCurrentPage("TraceList")}><img src={traceListIcon} width='16px'></img></button>
+                    <button><img src={metricsIcon} width='16px'></img></button>
+                    <button><img src={teamIcon} width='16px'></img></button>
+                    <button><img src={settingsIcon} width='16px'></img></button>
                 </div>
                 <div id='bodyContent'>
                     <Body/>

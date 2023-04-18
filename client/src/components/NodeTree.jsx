@@ -84,7 +84,7 @@ const NodeTree = (props) => {
   </g>
   );
 
-  const initialTranslate = {x:300, y:100};
+  const initialTranslate = {x:100, y:100};
   const textLayout = {textAnchor: "start", x: 10, y: 50, transform: undefined }
   const nodeSize = {x:160+40, y:80};
 
