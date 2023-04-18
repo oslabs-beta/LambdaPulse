@@ -110,7 +110,7 @@ const getTraceMiddleware = {
     try {
       let fullTraceArray = [];
 
-      const currTraceIds = [];
+      let currTraceIds = [];
       while (res.locals.traceArray.length) {
         if (currTraceIds.length < 5)
           currTraceIds.push(res.locals.traceArray.shift());

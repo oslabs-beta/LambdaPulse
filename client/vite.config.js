@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     proxy : {
       "/getTraces": "http://localhost:3000/",
+      "/clearTraces": "http://localhost:3000/",
       "/api": "http://localhost:3000/",
       "/blahblah": "http://localhost:3000/",
     },

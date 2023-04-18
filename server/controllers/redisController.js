@@ -95,6 +95,27 @@ const getRedisTraces = async (req,res,next) => {
     }
 }
 
+const clearTraces = async (req,res,next) => {
+    //Set TableName
+    console.log("in clearTraces")
+    const TableName = "Traces";
+    //Pull in logs from redis
+    try {
+        let data = await redisClient.del(TableName);
+            return next();
+    } catch(err)  {
+        console.log('Error', err)
+        let error = {
+            log: 'Express error handler caught redisController.clearTraces',
+            message: { err: err}
+        }
+        return next(error)
+    }
+}
+
+
+module.exports = { setLogs, getLogs, getErrLogs, getRedisTraces, clearTraces }
+
 // { "logs" : [
 //     {
 //     "id" : 0,
@@ -133,5 +154,3 @@ const getRedisTraces = async (req,res,next) => {
 // }
 // ]
 // }
-
-module.exports = { setLogs, getLogs, getErrLogs, getRedisTraces }
