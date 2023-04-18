@@ -98,14 +98,25 @@ const getTraceMiddleware = {
       return response;
     };
     try {
-      console.log(res.locals.traceArray);
-      const testArr = res.locals.traceArray.slice(0, 5);
-      console.log(testArr);
-      const result = await getTraceDetails(testArr);
-      // will be an array of objects for each trace. in each trace object is a
-      // segment property which will go to next middleware for sorting
-      // next middleware function will take care of iterating and main will sort
-      res.locals.traceSegmentData = result.Traces;
+      const fullTraceArray = [];
+
+      const currTraceIds = [];
+      while (res.locals.traceArray.length) {
+        if (currTraceIds.length < 5)
+          currTraceIds.push(res.locals.traceArray.shift());
+        else {
+          const result = await getTraceDetails(currTraceIds);
+          fullTraceArray = fullTraceArray.concat(result.Traces);
+          currTraceIds = [];
+        }
+      }
+      // if there is any remaining traces in currTraceIds
+      if (currTraceIds.length > 0) {
+        const result = await getTraceDetails(currTraceIds);
+        fullTraceArray = fullTraceArray.concat(result.Traces);
+      }
+
+      res.locals.traceSegmentData = fullTraceArray;
       next();
     } catch (err) {
       next(err);
@@ -116,6 +127,7 @@ const getTraceMiddleware = {
     console.log('in sortedSegments');
     try {
       const allNodes = [];
+      // traceIds can be found at the element
       for (let i = 0; i < res.locals.traceSegmentData.length; i++) {
         const currSegment = res.locals.traceSegmentData[i].Segments;
         const currRoot = main(currSegment);
