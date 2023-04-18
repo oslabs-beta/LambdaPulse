@@ -110,7 +110,7 @@ function Node(segment) {
   this.children = [];
   this.origin = segment.Document.origin;
   this.http = segment.Document.http;
-  // this.fullData = segment;
+  this.fullData = segment;
 }
 
 // creates Nodes from each segment

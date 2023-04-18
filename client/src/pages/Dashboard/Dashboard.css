@@ -2,15 +2,17 @@
     display:flex;
 }
 #sideBar {
-    width:15vw;
+    width:6vw;
     display:flex;
     flex-direction: column;
     border-style: inset;
     border-color:rgb(93, 93, 93);
     border-width: 3px;
+    text-align: center;
 }
 button{
     color:rgb(255, 51, 0);
+    background-color: #252525
 }
 #bodyContent{
     width:85vw;
