@@ -98,28 +98,28 @@ const getTraceMiddleware = {
       return response;
     };
     try {
-      const fullTraceArray = [];
+      let fullTraceArray = [];
 
       const currTraceIds = [];
       while (res.locals.traceArray.length) {
         if (currTraceIds.length < 5)
           currTraceIds.push(res.locals.traceArray.shift());
         else {
-          const result = await getTraceDetails(currTraceIds);
+          let result = await getTraceDetails(currTraceIds);
           fullTraceArray = fullTraceArray.concat(result.Traces);
           currTraceIds = [];
         }
       }
       // if there is any remaining traces in currTraceIds
       if (currTraceIds.length > 0) {
-        const result = await getTraceDetails(currTraceIds);
+        let result = await getTraceDetails(currTraceIds);
         fullTraceArray = fullTraceArray.concat(result.Traces);
       }
 
       res.locals.traceSegmentData = fullTraceArray;
-      next();
+      return next();
     } catch (err) {
-      next(err);
+      return next({status:500,log:'Error in traceDetails.getSegmentArray: '+err,message:'Error while getting trace details'});
     }
   },
 
