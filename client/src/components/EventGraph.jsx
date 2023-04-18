@@ -59,16 +59,16 @@ const EventGraph = (props) => {
 
     fetch('/getTraces',
       {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-type':'application/json'
         },
-        body: {
-          "userRoleArn": "arn:aws:iam::263792328682:role/LambdawgDelegationRole"
-        }
       })
       .then(result => result.json())
-      .then(data => console.log('Fetched ',data))
+      .then(data => {
+        console.log('Fetched ',data)
+        setNodeData(data[0]);
+      })
       .catch(err => console.log(err))
   },[]);
 
