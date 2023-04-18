@@ -4,7 +4,7 @@ import sampleLog from '../assets/sampleLog'
 
 const columns = [
   {
-    name: '"@timestamp"',
+    name: '@timestamp',
     selector: row => row["@timestamp"],
     width:"200px",
   },
@@ -18,15 +18,15 @@ const columns = [
     width:"350px"
   },
   {
-    name: '"@log"',
+    name: '@log',
     selector: row => row["@log"],
     width:"350px"
   },
 ];
 
-createTheme('solarized', {
+createTheme('dark', {
   text: {
-    primary: '#ff3300',
+    primary: '#dddddd',
     secondary: '#2aa198',
   },
   background: {
@@ -75,8 +75,8 @@ const LogPanel = (props) => {
       <DataTable
             columns={columns}
             data={sampleLog}
-            theme="solarized"
-            customStyles={customStyles}
+            theme="dark"
+            //customStyles={customStyles}
         />
     </div>
   )

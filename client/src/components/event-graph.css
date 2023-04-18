@@ -16,7 +16,7 @@
   width: 50%;
   position:relative;
   right:0px;
-  height: 100vh;
+  scroll-behavior:auto;
 }
 
 

@@ -3,6 +3,7 @@ import NavBar from '../../components/NavBar';
 import EventGraph from '../../components/EventGraph';
 import HomeDisplay from '../../components/HomeDisplay';
 import TraceList from '../../components/TraceList'
+import Metrics from '../../components/Metrics'
 import { Route, Routes } from 'react-router-dom';
 import './Dashboard.css'
 import LeftBar from '../../components/LeftBar';
@@ -51,7 +52,8 @@ const Dashboard = () => {
             <div className='body'>
                 {currentPage === "Home" && <HomeDisplay/>}
                 {currentPage === "EventGraph" && <EventGraph nodeData={nodeData}/>}
-                {currentPage === "TraceList" && <TraceList traces={traceList} setCurrentTrace={setCurrentTrace}/>}
+                {currentPage === "TraceList" && <TraceList traces={traceList} currentTrace={currentTrace} setCurrentTrace={setCurrentTrace}/>}
+                {currentPage === "Metrics" && <Metrics />}
             </div>
         )
     }
@@ -63,7 +65,7 @@ const Dashboard = () => {
                     <button onClick={()=>setCurrentPage("Home")}><img src={homeIcon} width='16px'></img></button>
                     <button onClick={()=>setCurrentPage("EventGraph")}><img src={eventGraphIcon} width='16px'></img></button>
                     <button onClick={()=>setCurrentPage("TraceList")}><img src={traceListIcon} width='16px'></img></button>
-                    <button><img src={metricsIcon} width='16px'></img></button>
+                    <button onClick={()=>setCurrentPage("Metrics")}><img src={metricsIcon} width='16px'></img></button>
                     <button><img src={teamIcon} width='16px'></img></button>
                     <button><img src={settingsIcon} width='16px'></img></button>
                 </div>
