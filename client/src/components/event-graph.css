@@ -5,7 +5,7 @@
 }
 
 .EventPanelContainer {
-  width:67%;
+  width:50%;
   display: flex;
   background-color: #252525;
 }
@@ -13,7 +13,7 @@
 .LogPanel {
   background-color: #191919;
   color: #dddddd;
-  width: 33%;
+  width: 50%;
   position:relative;
   right:0px;
   height: 100vh;
