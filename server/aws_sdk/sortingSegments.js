@@ -108,8 +108,8 @@ function Node(segment) {
   this.parent_id = segment.Document.parent_id;
   this.subsegments = segment.Document.subsegments;
   this.children = [];
-  // this.origin = segment.Document.origin;
-  // this.http = segment.Document.http;
+  this.origin = segment.Document.origin;
+  this.http = segment.Document.http;
   // this.fullData = segment;
 }
 
