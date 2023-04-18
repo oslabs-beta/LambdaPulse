@@ -1,52 +1,82 @@
 import { useEffect, useState } from 'react';
-import DataTable from 'react-data-table-component'
+import  DataTable, { createTheme } from 'react-data-table-component'
 import sampleLog from '../assets/sampleLog'
 
 const columns = [
   {
     name: '"@timestamp"',
     selector: row => row["@timestamp"],
+    width:"200px",
   },
   {
     name: '@message',
     selector: row => row["@message"],
   },
   {
-    name: '@logstream',
-    selector: row => row['@logstream'],
+    name: "@logStream",
+    selector: row => row["@logStream"],
+    width:"350px"
   },
   {
     name: '"@log"',
-    selector: row => row["@log"]
+    selector: row => row["@log"],
+    width:"350px"
   },
 ];
 
-const data = [
-  {
-      id: 1,
-      title: 'Beetlejuice',
-      year: '1988',
+createTheme('solarized', {
+  text: {
+    primary: '#ff3300',
+    secondary: '#2aa198',
   },
-  {
-      id: 2,
-      title: 'Ghostbusters',
-      year: '1984',
+  background: {
+    default: '#222222',
   },
-]
+  context: {
+    background: '#cb4b16',
+    text: '#FFFFFF',
+  },
+  divider: {
+    default: '#073642',
+  },
+  action: {
+    button: 'rgba(0,0,0,.54)',
+    hover: 'rgba(0,0,0,.08)',
+    disabled: 'rgba(0,0,0,.12)',
+  },
+}, 'dark');
+
+const customStyles = {
+  rows: {
+      style: {
+          minHeight: '72px', // override the row height
+      },
+  },
+  headCells: {
+      style: {
+          paddingLeft: '8px', // override the cell padding for head cells
+          paddingRight: '8px',
+      },
+  },
+  cells: {
+      style: {
+          paddingLeft: '8px', // override the cell padding for data cells
+          paddingRight: '8px',
+      },
+  },
+};
+
 
 const LogPanel = (props) => {
-  const logs = [];
-  for (let i = 0; i < props.lData.logs.length; i++) {
-    logs.push(<div key={'lp' + Math.random()}>{props.lData.logs[i]}</div>)
-  }
 
   return (
     <div className='LogPanel'>
       <h3>Log Detail:</h3>
-      {logs}
       <DataTable
             columns={columns}
             data={sampleLog}
+            theme="solarized"
+            customStyles={customStyles}
         />
     </div>
   )
