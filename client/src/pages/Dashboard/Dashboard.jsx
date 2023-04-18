@@ -11,7 +11,7 @@ const Dashboard = () => {
 
     function Body(){
         return(
-            <div clasName='body'>
+            <div className='body'>
                 {currentPage === "Home" && <HomeDisplay/>}
                 {currentPage === "EventGraph" && <EventGraph/>}
             </div>

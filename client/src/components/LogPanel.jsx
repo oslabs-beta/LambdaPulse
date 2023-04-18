@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const LogPanel = (props) => {
   const logs = [];
   for (let i = 0; i < props.lData.logs.length; i++) {
-    logs.push(<div>{props.lData.logs[i]}</div>)
+    logs.push(<div key={'lp' + Math.random()}>{props.lData.logs[i]}</div>)
   }
 
   return (

@@ -4,7 +4,9 @@ const { stsClient } = require('../db.config.js');
 const awsCredentialsController = {};
 
 awsCredentialsController.getCredentials = async (req, res, next) => {
-  const { userRoleArn } = req.body;
+  console.log('new requestt');
+  const userRoleArn = process.env.USER_ROLE_ARN;
+  console.log('req body: ',req.body)
 
   if (!userRoleArn) {
     return res.status(400).json({ message: 'User Role ARN is required.' });
@@ -24,6 +26,7 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
     };
     console.log('in awsCredentialsController')
     res.locals.awsCredentials = temporaryCredentials;
+    console.log('aws creds', res.locals.awsCredentials)
     return next();
   } catch (err) {
     console.error('Error assuming role:', err);

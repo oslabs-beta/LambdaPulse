@@ -1,6 +1,7 @@
 const express = require('express'),
   PORT = 3000,
   app = express();
+const cors = require('cors');
 const userController = require('./controllers/userController');
 const redisController = require('./controllers/redisController');
 const awsCredentialsController = require('./controllers/awsCredentialsController');
@@ -12,8 +13,16 @@ const getTraceMiddleware = require('./aws_sdk/traceDetails');
 // import  { createUser } from './controllers/userController.js';
 // import { Module } from "module";
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  next();
+});
 
 app.get('/api', (req, res) => {
   let data = 'hello';
@@ -35,11 +44,26 @@ app.post('/setLogs', redisController.setLogs, (req, res) => {
   // res.redirect('homepage');
   res.sendStatus(200);
 });
-app.post(
+
+const testController = async (req, res, next) => {
+  console.log('we made it this far...');
+  return next();
+}
+
+
+app.get(
+  '/blahblah',
+  (req,res) => {
+    res.status(200).json({status:'ok'})
+  }
+);
+
+app.get(
   '/getTraces',
   awsCredentialsController.getCredentials,
   getTraceMiddleware.getSummary,getTraceMiddleware.getSegmentArray,getTraceMiddleware.sortSegments,
   (req, res) => {
+    console.log('Sending this back to the frontend:' , res.locals.nodes)
     res.status(200).json(res.locals.nodes);
   }
 );
@@ -61,7 +85,7 @@ app.use((req, res) => res.sendStatus(404));
 //Global error handler
 app.use((err, req, res, next) => {
   const defaultErr = {
-    log: 'Express error handler caught unkown middleware error',
+    log: 'Express error handler caught unknown middleware error',
     status: 400,
     message: { err: 'An error occurred' },
   };
