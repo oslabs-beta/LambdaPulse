@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { db, Users } = require('../db.config.js');
+const { v4: uuidv4 } = require('uuid');
 
 const createUser = (req, res, next) => {
   //Set TableName
@@ -30,7 +31,14 @@ const createUser = (req, res, next) => {
 
           hashedPassword = hash;
           //// !!! user_id!!!!!
-          const Item = { user_id: username, password: hashedPassword };
+          const user_id = uuidv4();
+
+          const Item = {
+            user_id,
+            fullName,
+            email,
+            password: hashedPassword,
+          };
           console.log(fullName, email, password, TableName);
 
           try {
@@ -49,7 +57,6 @@ const createUser = (req, res, next) => {
       });
     }
   });
-  // console.log(hashedPassword);
 };
 
 const verifyUser = async (req, res, next) => {
