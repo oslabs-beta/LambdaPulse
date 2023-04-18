@@ -4,6 +4,7 @@ import dynamoDBIcon from '../assets/dynamoDB.svg'
 import lambdaFuncIcon from '../assets/lambdaFunc.svg'
 import simpleNotificationIcon from '../assets/simpleNotification.svg'
 import apiGatewayEndpointIcon from '../assets/apigatewayendpoint.svg'
+import sesIcon from '../assets/sesIcon.svg'
 import rs from '../assets/react.svg'
 import './custom-tree.css';
 
@@ -24,6 +25,7 @@ const NodeTree = (props) => {
     else if (nType == 'AWS::Lambda::Function') return lambdaFuncIcon;
     else if (nType == 'AWS::DynamoDB::Table') return dynamoDBIcon;
     else if (nType == 'AWS::ApiGateway::Stage') return apiGatewayEndpointIcon;
+    else if (nType == 'AWS::SES') return sesIcon;
     else if (nType == 'simpleNotification') return simpleNotificationIcon;
     else {
       console.log('Got unknown origin: ' + nType)
@@ -36,6 +38,7 @@ const NodeTree = (props) => {
     else if (nType == 'AWS::Lambda::Function') return 'red';
     else if (nType == 'AWS::DynamoDB::Table') return 'blue';
     else if (nType == 'AWS::ApiGateway::Stage') return '#4D27AA';
+    else if (nType == 'AWS::SES') return 'blue';
     else if (nType == 'simpleNotification') return 'pink';
     else return 'gray';
   }

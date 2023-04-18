@@ -67,7 +67,7 @@ const EventGraph = (props) => {
       .then(result => result.json())
       .then(data => {
         console.log('Fetched ',data)
-        setNodeData(data[0]);
+        setNodeData(data[1]);
       })
       .catch(err => console.log(err))
   },[]);
