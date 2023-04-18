@@ -2,17 +2,20 @@
     display:flex;
 }
 #sideBar {
-    width:200px;
+    width:15vw;
     display:flex;
     flex-direction: column;
     border-style: inset;
-    border-color:rgb(255, 106, 0);
+    border-color:rgb(93, 93, 93);
     border-width: 3px;
 }
+button{
+    color:rgb(255, 51, 0);
+}
 #bodyContent{
-    width:100%;
-    background-color:red;
+    width:85vw;
+    background-color: #252525;
     border-style: inset;
-    border-color:rgb(255, 106, 0);
+    border-color:rgb(93, 93, 93);
     border-width: 3px;
 }

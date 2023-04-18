@@ -4,7 +4,7 @@ const { stsClient } = require('../db.config.js');
 const awsCredentialsController = {};
 
 awsCredentialsController.getCredentials = async (req, res, next) => {
-  console.log('new requestt');
+  console.log('Received creds request at ' + Date.now());
   const userRoleArn = process.env.USER_ROLE_ARN;
   console.log('req body: ',req.body)
 

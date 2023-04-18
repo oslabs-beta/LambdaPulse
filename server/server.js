@@ -7,12 +7,6 @@ const redisController = require('./controllers/redisController');
 const awsCredentialsController = require('./controllers/awsCredentialsController');
 const getTraceMiddleware = require('./aws_sdk/traceDetails');
 
-// import express from "express";
-// const PORT = 3000,
-// app = express();
-// import  { createUser } from './controllers/userController.js';
-// import { Module } from "module";
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -82,6 +76,7 @@ app.use((err, req, res, next) => {
     message: { err: 'An error occurred' },
   };
   const errorObj = Object.assign({}, defaultErr, err);
+  console.log('Global error: ', errorObj.log);
   return res.status(errorObj.status).json(errorObj.message);
 });
 
