@@ -41,6 +41,7 @@ app.post('/setLogs', redisController.setLogs, (req, res) => {
 
 app.get(
   '/getTraces',
+  redisController.getRedisTraces,
   awsCredentialsController.getCredentials,
   getTraceMiddleware.getSummary,getTraceMiddleware.getSegmentArray,getTraceMiddleware.sortSegments,
   (req, res) => {
