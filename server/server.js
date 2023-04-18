@@ -21,10 +21,10 @@ app.use(function (req, res, next) {
   next();
 });
 
-// app.get('/api', (req, res) => {
-//   let data = 'hello';
-//   res.status(200).json(data);
-// });
+app.get('/api', (req, res) => {
+  let data = 'hello';
+  res.status(200).json(data);
+});
 app.post('/createUser', userController.createUser, (req, res) => {
   console.log('in create user');
   res.sendStatus(201);
