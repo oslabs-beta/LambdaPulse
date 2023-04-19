@@ -55,9 +55,9 @@ app.get(
   }
 );
 
-app.get('/clearTraces', redisController.clearTraces, (req,res) => {
+app.get('/clearTraces', redisController.clearTraces, (req, res) => {
   res.sendStatus(200);
-})
+});
 
 app.get('/getLogs', redisController.getLogs, (req, res) => {
   //successful login
