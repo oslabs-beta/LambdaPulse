@@ -5,16 +5,21 @@ const {
   GetTraceSummariesCommand,
   BatchGetTracesCommand,
 } = require('@aws-sdk/client-xray');
-//redis client to add traces to redis
+const {
+  CloudWatchLogsClient,
+  FilterLogEventsCommand,
+} = require('@aws-sdk/client-cloudwatch-logs');
+const aws = require('aws-sdk');
+
 const Redis = require('redis');
 const redisClient = Redis.createClient();
 redisClient.connect();
 redisClient.on('error', (err) => {
-    console.error(err);
-  });
-
+  console.error(err);
+});
 
 const main = require('./sortingSegments');
+//redis client to add traces to redis
 
 // const awsCredentials = {
 //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -54,6 +59,7 @@ const main = require('./sortingSegments');
 //     console.log(err, ' in gettracedetails');
 //   });
 
+console.log('out of get logs');
 const getTraceMiddleware = {
   getSummary: async (req, res, next) => {
     if (res.locals.redisTraces != undefined) return next();
@@ -74,6 +80,7 @@ const getTraceMiddleware = {
       };
 
       const response = await xClient.send(new GetTraceSummariesCommand(params));
+
       return response;
     };
     // get the data in xray. will return an array on res
@@ -81,6 +88,10 @@ const getTraceMiddleware = {
       const result = await getTraceSummary();
       const traceArray = result.TraceSummaries;
       const traceIds = traceArray.map((node) => {
+        // console.log(node);
+        // get arn for each node
+        // console.log(node.ResourceARNs[1]);
+        // console.log(node.Id);
         return node.Id;
       });
       // console.log(traceIds);
@@ -110,30 +121,29 @@ const getTraceMiddleware = {
     try {
       let fullTraceArray = [];
 
-      let currTraceIds = [];
+      const currTraceIds = [];
       while (res.locals.traceArray.length) {
         if (currTraceIds.length < 5)
           currTraceIds.push(res.locals.traceArray.shift());
         else {
-          let result = await getTraceDetails(currTraceIds);
+          const result = await getTraceDetails(currTraceIds);
           fullTraceArray = fullTraceArray.concat(result.Traces);
           currTraceIds = [];
         }
       }
-      // if there is any remaining traces in currTraceIds
       if (currTraceIds.length > 0) {
-        let result = await getTraceDetails(currTraceIds);
+        const result = await getTraceDetails(currTraceIds);
         fullTraceArray = fullTraceArray.concat(result.Traces);
       }
-
+      console.log(fullTraceArray, 'this is full trace array');
       res.locals.traceSegmentData = fullTraceArray;
-      return next();
+      next();
     } catch (err) {
-      return next({status:500,log:'Error in traceDetails.getSegmentArray: '+err,message:'Error while getting trace details'});
+      next(err);
     }
   },
 
-  sortSegments: (req, res, next) => {
+  sortSegments: async (req, res, next) => {
     if (res.locals.redisTraces != undefined) {
       res.locals.nodes = res.locals.redisTraces;
       return next();
@@ -142,18 +152,81 @@ const getTraceMiddleware = {
     try {
       const allNodes = [];
       // traceIds can be found at the element
+
       for (let i = 0; i < res.locals.traceSegmentData.length; i++) {
         const currSegment = res.locals.traceSegmentData[i].Segments;
+        // console.log(currSegment);
         const currRoot = main(currSegment);
-        allNodes.push(currRoot);
+
+        // below is the process to get the logs for the lambda functions
+        // currRoot[0] is the node
+        let currentAllSegments = currRoot[1];
+
+        if (currentAllSegments.length) {
+          for (let i = 0; i < currentAllSegments.length; i++) {
+            if (
+              currentAllSegments[i].Document.origin === 'AWS::Lambda' &&
+              currentAllSegments[i].Document.aws.request_id
+            ) {
+              let requestId = currentAllSegments[i].Document.aws.request_id;
+              let segmentName = `/aws/lambda/${currentAllSegments[i].Document.name}`;
+              // await getLogs();
+              console.log(requestId, ' ', segmentName);
+
+              // call the functino for get logs in here and add the to the node
+              // add the logs onto currRoot[0].logs = logs or something
+
+              const logs = await getLogs(requestId, segmentName);
+
+              logs.forEach((log) => {
+                if (log.message.includes('START')) {
+                  currRoot[0].cold_start = true;
+                }
+              });
+              currRoot[0].logs = logs;
+            }
+          }
+        }
+        allNodes.push(currRoot[0]);
       }
 
+      async function getLogs(requestId, logGroupName) {
+        const endTime = new Date();
+        const startTime = new Date(endTime.getTime() - 60 * 60 * 1000);
+
+        const cloudwatchlogs = new CloudWatchLogsClient({
+          credentials: res.locals.awsCredentials,
+          region: 'us-east-1',
+        });
+
+        const params = {
+          logGroupName,
+
+          startTime: startTime.getTime(),
+          endTime: endTime.getTime(),
+
+          // filter:
+        };
+
+        const command = new FilterLogEventsCommand(params);
+
+        try {
+          const data = await cloudwatchlogs.send(command);
+          console.log(data, 'this is the data');
+          const node_logs = data.events.filter((segEvent) => {
+            return segEvent.message.includes(requestId);
+          });
+          return node_logs;
+        } catch (error) {
+          console.error('Error fetching logs:', error);
+        }
+      }
       res.locals.nodes = allNodes;
-      console.log(allNodes);
-      try{
-        console.log('HOOBLA')
-        redisClient.set("Traces", JSON.stringify(allNodes));
-        console.log("HOOBLA PT 2")
+
+      try {
+        console.log('HOOBLA');
+        redisClient.set('Traces', JSON.stringify(allNodes));
+        console.log('HOOBLA PT 2');
       } catch (err) {
         next(err);
       }
