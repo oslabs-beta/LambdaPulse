@@ -73,14 +73,14 @@ const verifyUser = async (req, res, next) => {
     const { Item: userData } = await db.get({ TableName, Key });
 
     if (!userData) {
-      return res.status(401).json({ message: 'User not found' });
+      return res.sendStatus(401);
     }
 
     const isMatch = await bcrypt.compare(password, userData.password);
     console.log('matched?', isMatch);
 
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid password or email' });
+      return res.sendStatus(401);
     }
 
     return next();

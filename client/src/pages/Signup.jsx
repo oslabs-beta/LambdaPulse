@@ -9,6 +9,11 @@ const Signup = () => {
   const [fullName, setFulltName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  // const [loading, setLoading] = useState(false);
+  // {loading && (
+  //   <img className='loading-spinner' src={spinner} alt='Loading' />
+  // )}
+  // setLoading(true);
 
   const navigate = useNavigate();
 
@@ -17,6 +22,7 @@ const Signup = () => {
       setErrorMessage('Passwords do not match');
       return;
     }
+
     const userData = {
       email,
       password,
@@ -34,12 +40,11 @@ const Signup = () => {
           navigate('/dashboard');
         } else if (response.status === 409) {
           setErrorMessage('Email already exists');
+
           // alert('Error registering the user');
-        } 
+        }
       })
-      // else if (response.status === 401) {
-      //   setErrorMessage('Invalid password or email');
-      // }
+
       // .then((response) => {
       //   if (response.status === 201) {
       //     navigate('/dashboard');
