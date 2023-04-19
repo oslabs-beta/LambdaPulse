@@ -135,6 +135,11 @@ const HomeDisplay = (props) => {
                 paddingAngle={0}
                 radius={50}
                 startAngle={0}
+                label={(props) => {return props.dataEntry.title} }
+                labelStyle={{
+                    fill: 'white',
+                    fontSize: '4px'
+               }}
                 />
             </div>
 
