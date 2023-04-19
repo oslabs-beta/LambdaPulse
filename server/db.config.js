@@ -41,24 +41,25 @@ const describeTableParams = {
 };
 
 const createTableParams = {
-    TableName: Users,
-    AttributeDefinitions: [
-      {
-        AttributeName: 'user_id',
-        AttributeType: 'S',
-      },
-    ],
-    KeySchema: [
-      {
-        AttributeName: 'user_id',
-        KeyType: 'HASH',
-      },
-    ],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5,
+  TableName: Users,
+  AttributeDefinitions: [
+    {
+      AttributeName: 'email',
+      AttributeType: 'S',
     },
-  };
+  ],
+  KeySchema: [
+    {
+      AttributeName: 'email',
+      KeyType: 'HASH',
+    },
+  ],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 5,
+    WriteCapacityUnits: 5,
+  },
+};
+
 const describeTableCommand = new DescribeTableCommand(describeTableParams);
 const createTableCommand = new CreateTableCommand(createTableParams);
 
