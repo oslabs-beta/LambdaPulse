@@ -10,9 +10,8 @@ const Redis = require('redis');
 const redisClient = Redis.createClient();
 redisClient.connect();
 redisClient.on('error', (err) => {
-    console.error(err);
-  });
-
+  console.error(err);
+});
 
 const main = require('./sortingSegments');
 
@@ -129,7 +128,11 @@ const getTraceMiddleware = {
       res.locals.traceSegmentData = fullTraceArray;
       return next();
     } catch (err) {
-      return next({status:500,log:'Error in traceDetails.getSegmentArray: '+err,message:'Error while getting trace details'});
+      return next({
+        status: 500,
+        log: 'Error in traceDetails.getSegmentArray: ' + err,
+        message: 'Error while getting trace details',
+      });
     }
   },
 
@@ -150,10 +153,10 @@ const getTraceMiddleware = {
 
       res.locals.nodes = allNodes;
       console.log(allNodes);
-      try{
-        console.log('HOOBLA')
-        redisClient.set("Traces", JSON.stringify(allNodes));
-        console.log("HOOBLA PT 2")
+      try {
+        console.log('HOOBLA');
+        redisClient.set('Traces', JSON.stringify(allNodes));
+        console.log('HOOBLA PT 2');
       } catch (err) {
         next(err);
       }
