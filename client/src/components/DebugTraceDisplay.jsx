@@ -3,26 +3,9 @@ import  DataTable, { createTheme } from 'react-data-table-component'
 
 const columns = [
   {
-    name: 'id',
-    selector: row => row["id"],
-    width:"200px",
-  },
-  {
-    name: 'trace name',
-    selector: row => row["traceName"],
-    width:"200px",
-    sortable: true,
-  },
-  {
-    name: 'origin',
-    selector: row => row["traceOrigin"],
-    width:"200px",
-    sortable: true,
-  },
-  {
     name: 'name',
     selector: row => row["name"],
-    width:"200px",
+    width:"250px",
     sortable: true,
   },
   {
@@ -32,26 +15,44 @@ const columns = [
     sortable: true,
   },
   {
-    name: 'end time',
-    selector: row => row["end_time"],
+    name: 'duration',
+    selector: row => row["duration"],
+    width:"100px",
+    sortable: true,
+  },
+  {
+    name: 'error',
+    selector: row => row["error"],
+    width:"100px",
+    sortable: true,
+  },
+  {
+    name: 'cause',
+    selector: row => row["cause"],
+    width:"400px",
+    wrap:true
+  },
+  {
+    name: 'status',
+    selector: row => row["status"],
+    width:"100px",
+    sortable: true,
+  },
+  {
+    name: 'origin',
+    selector: row => row["origin"],
     width:"200px",
     sortable: true,
   },
   {
-    name: 'url',
-    selector: row => row["url"],
+    name: 'subsegments',
+    selector: row => row["subsegments"],
     width:"200px",
     sortable: true,
   },
   {
     name: 'method',
     selector: row => row["method"],
-    width:"200px",
-    sortable: true,
-  },
-  {
-    name: 'status',
-    selector: row => row["status"],
     width:"200px",
     sortable: true,
   },
@@ -90,6 +91,12 @@ createTheme('dark', {
       disabled: 'rgba(0,0,0,.12)',
     },
   }, 'dark');
+
+const getStartLocale = (startSec) => {
+  let start = new Date(0);
+  start.setUTCSeconds(startSec);
+  return start.toLocaleString()
+}
   
 
 const flattenTrace = (trace) => { 
@@ -97,38 +104,36 @@ const flattenTrace = (trace) => {
   console.log('flattening ' + trace)
   
   const process = (node) => {
+
+    const nr = {};
+    const n = node.fullData.Document;
+    console.log(n);
+
+    if (n['start_time']) nr.start_time = getStartLocale(n['start_time']);
+    if (n['start_time'] && n['end_time']) nr.duration = Math.floor( (n['end_time'] - n['start_time']) * 1000)/1000;
+    nr.name = n['name'];
+    if (n.http && n.http.response) nr.status = n.http.response.status;
+    if (n.cause) {
+      nr.cause = n.cause.message;
+      for (const e in n.cause.exceptions) {
+        nr.cause += n.cause.exceptions[e].message;
+      }
+    }
+    if (n.error) nr.error = 'yes';
+    if (n.origin) nr.origin = n.origin;
+    if (n.subsegments) {
+      let c = 0;
+      for (let i = 0; i < n.subsegments.length; i++) {
+        c++;
+      }
+      nr.subsegments = c;
+    }
+
     for (const c in node.children) {
       process(node.children[c]);
     }
 
-    for (const s in node.subsegments) {
-      let subSeg = {};
-      subSeg = Object.assign(subSeg,node);
-      subSeg = Object.assign(subSeg,node.subsegments[s])
-      subSeg.traceName = node.name;
-      subSeg.traceOrigin = node.origin;
-      if (subSeg.start_time) {
-        let start = new Date(0);
-        start.setUTCSeconds(subSeg.start_time);
-        subSeg.start_time = start.toLocaleString()
-      }
-      if (subSeg.end_time) {
-        let end = new Date(0);
-        end.setUTCSeconds(subSeg.end_time);
-        subSeg.end_time = end.toLocaleString()
-      }
-      if (subSeg.http) {
-        if (subSeg.http.request) {
-          subSeg.url = subSeg.http.request.url;
-          subSeg.method = subSeg.http.request.method;
-        }
-        if (subSeg.http.response) {
-          subSeg.status = subSeg.http.response.status;
-        }
-      }
-      subSeg.fullData = JSON.stringify(node.fullData);
-      result.push(subSeg);
-    }
+    result.push(nr);
   }
 
   process(trace);
@@ -143,7 +148,7 @@ const DebugTraceDisplay = (props) => {
 
   return (
     <div >
-      <h3>Subsegment Detail:</h3>
+      <h3>Segment Detail:</h3>
       <DataTable
         columns={columns}
         data={flattenTrace(props.trace)}

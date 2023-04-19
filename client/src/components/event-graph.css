@@ -19,4 +19,25 @@
   scroll-behavior:auto;
 }
 
+.metrics__info__display {
+  background-color: #191919;
+  height: 160px;
+  width: 300px;
+  padding: 40px;
+  margin: 10px;
+}
+
+.metrics__visual__display {
+  background-color: #191919;
+  height: 160px;
+  width: 300px;
+  padding: 4px;
+  margin: 10px;
+}
+
+.metrics__home__container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr
+}
+
 

@@ -29,8 +29,23 @@ createTheme('dark', {
     primary: '#dddddd',
     secondary: '#2aa198',
   },
-  'dark'
-);
+  background: {
+    default: '#222222',
+  },
+  context: {
+    background: '#cb4b16',
+    text: '#FFFFFF',
+  },
+  divider: {
+    default: '#073642',
+  },
+  action: {
+    button: 'rgba(0,0,0,.54)',
+    hover: 'rgba(0,0,0,.08)',
+    disabled: 'rgba(0,0,0,.12)',
+  },
+}, 'dark');
+
 
 const customStyles = {
   rows: {

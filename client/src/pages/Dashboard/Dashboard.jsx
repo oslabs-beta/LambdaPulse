@@ -50,7 +50,7 @@ const Dashboard = () => {
     function Body(){
         return(
             <div className='body'>
-                {currentPage === "Home" && <HomeDisplay/>}
+                {currentPage === "Home" && <HomeDisplay traces={traceList} currentTrace={currentTrace} />}
                 {currentPage === "EventGraph" && <EventGraph nodeData={nodeData}/>}
                 {currentPage === "TraceList" && <TraceList traces={traceList} currentTrace={currentTrace} setCurrentTrace={setCurrentTrace}/>}
                 {currentPage === "Metrics" && <Metrics />}
