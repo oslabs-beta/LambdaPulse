@@ -12,14 +12,12 @@ const getStartLocale = (startSec) => {
 
 const flattenTrace = (trace) => { 
     const result = [];
-    console.log('flattening ' + trace)
     if (!trace) return;
     
     const process = (node) => {
   
       const nr = {};
       const n = node.fullData.Document;
-      console.log(n);
   
       if (n['start_time']) nr.start_time = getStartLocale(n['start_time']);
       if (n['start_time'] && n['end_time']) nr.duration = Math.floor( (n['end_time'] - n['start_time']) * 1000)/1000;
@@ -103,8 +101,6 @@ const HomeDisplay = (props) => {
     let sumDuration = 0;
     let countDuration = 0;
     for (const t in props.traces) {
-      console.log('checking duration across ' + props.traces.length + ' traces')
-      console.log(props.traces[t])
       const n = props.traces[t];
       if (n.fullData && n.fullData.Document.start_time) {
         let duration = n.fullData.Document.end_time - n.fullData.Document.start_time;

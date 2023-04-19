@@ -6,6 +6,7 @@ import simpleNotificationIcon from '../assets/simpleNotification.svg'
 import apiGatewayEndpointIcon from '../assets/apigatewayendpoint.svg'
 import sesIcon from '../assets/sesIcon.svg'
 import errorIcon from '../assets/error-905.svg'
+import errorIcon2 from '../assets/error-svgrepo-com.svg'
 import rs from '../assets/react.svg'
 import './custom-tree.css';
 
@@ -58,6 +59,10 @@ const NodeTree = (props) => {
     props.setNds({top: e.clientY+10, left: e.clientX+10, display: 'none', curNode: null});
   }
 
+  const getErrorDim = (e) => {
+    if (e) return 24;
+    else return 0;
+  }
   
 
   const renderRectSvgNode = ({ nodeDatum, toggleNode }) => (
@@ -78,6 +83,9 @@ const NodeTree = (props) => {
           onMouseEnter={(e) => handleMouseEnter(e, nodeDatum)}
           onMouseLeave={(e) => handleMouseLeave(e)}
           />
+      <circle r={getErrorDim(nodeDatum.fullData.Document.error)/2.5} fill='#ff0000' cx="12" cy="12" />
+      <image x="0" y="0" width={getErrorDim(nodeDatum.fullData.Document.error)}
+        href={errorIcon2} />
       <text stroke="#dddddd" strokeWidth="1" x="-50" y="40" fontSize="x-small">
       {nodeDatum.name}
       </text>
@@ -108,7 +116,6 @@ const NodeTree = (props) => {
       <Tree data={nodeData}
               orientation={"vertical"}
               pathClassFunc={getDynamicPathClass}
-              onClick={() => console.log('yoooo')}  //not working
               translate={initialTranslate}
               collapsible={false} 
               zoom={1}

@@ -117,7 +117,6 @@ const flattenTrace = (trace) => {
 
     const nr = {};
     const n = node.fullData.Document;
-    console.log(n);
 
     if (n['start_time']) nr.start_time = getStartLocale(n['start_time']);
     if (n['start_time'] && n['end_time']) nr.duration = Math.floor( (n['end_time'] - n['start_time']) * 1000)/1000;
@@ -152,9 +151,6 @@ const flattenTrace = (trace) => {
 }
 
 const DebugTraceDisplay = (props) => {
-  console.log(props);
-
-  console.log(flattenTrace(props.trace))
 
   return (
     <div >

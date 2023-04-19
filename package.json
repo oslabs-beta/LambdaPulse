@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-cloudwatch-logs": "^3.315.0",
     "@aws-sdk/client-dynamodb": "^3.315.0",
     "@aws-sdk/client-xray": "^3.312.0",
     "@aws-sdk/lib-dynamodb": "^3.315.0",

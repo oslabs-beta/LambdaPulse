@@ -27,6 +27,10 @@
   margin: 10px;
 }
 
+.metrics__info__display h2 {
+  color: #ff3300;
+}
+
 .metrics__visual__display {
   background-color: #191919;
   height: 340px;
