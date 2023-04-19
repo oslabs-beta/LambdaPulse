@@ -1,83 +1,88 @@
 const bcrypt = require('bcrypt');
 const { db, Users } = require('../db.config.js');
 
-const createUser = (req, res, next) => {
-  //Set TableName
+const createUser = async (req, res, next) => {
   const TableName = Users;
-  //Pull in username and password from the body
   const { fullName, email, password } = req.body;
-  //Bcrypt password
-  let hashedPassword;
-  bcrypt.genSalt(10, function (saltErr, salt) {
-    if (saltErr) {
-      console.log('Error', saltErr);
-      let error = {
-        log: 'Express error handler caught userController.createUser, saltError',
-        message: { err: saltErr },
-      };
-      return next(error);
-    } else {
-      bcrypt.hash(password, salt, function (hashErr, hash) {
-        if (hashErr) {
-          console.log('Error', hashErr);
-          let error = {
-            log: 'Express error handler caught userController.createUser, hashError',
-            message: { err: hashErr },
-          };
-          return next(error);
-        } else {
-          console.log('hash', hash);
+  console.log(fullName, email, password);
 
-          hashedPassword = hash;
-          //// !!! user_id!!!!!
-          const Item = { user_id: username, password: hashedPassword };
-          console.log(fullName, email, password, TableName);
+  try {
+    // Check if email already exists
+    const getResult = await db.get({
+      TableName: TableName,
+      Key: {
+        email,
+      },
+    });
+    // no need to use promises for SDK v3
+    //   .promise();
+    // const getResult = await new Promise((resolve, reject) => {
+    //   db.get(
+    //     {
+    //       TableName: TableName,
+    //       Key: {
+    //         email,
+    //       },
+    //     },
+    //     (err, data) => {
+    //       if (err) reject(err);
+    //       else resolve(data);
+    //     }
+    //   );
+    // });
 
-          try {
-            db.put({ TableName: TableName, Item: Item }).promise();
-            console.log('in try');
-            return next();
-          } catch (err) {
-            console.log('Error', err);
-            let error = {
-              log: 'Express error handler caught userController.createUser',
-              message: { err: err },
-            };
-            return next(error);
-          }
-        }
-      });
+    if (getResult.Item) {
+      return res.sendStatus(409);
     }
-  });
-  // console.log(hashedPassword);
+
+    // If email does not exist, create new user
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const Item = {
+      fullName,
+      email,
+      password: hashedPassword,
+    };
+
+    await db.put({
+      TableName: TableName,
+      Item: Item,
+    });
+    //   .promise();
+
+    console.log('User created successfully');
+    return next();
+  } catch (err) {
+    console.log('Error', err);
+    let error = {
+      log: 'Express error handler caught userController.createUser',
+      message: { err: err },
+    };
+    return next(error);
+  }
 };
 
 const verifyUser = async (req, res, next) => {
   const TableName = Users;
-  const { username, password } = req.body;
-  const Key = { ['user_id']: username };
-  console.log(username, password, TableName);
+  const { email, password } = req.body;
+  const Key = { email };
+  console.log(email, password, TableName);
 
   try {
-    await db
-      .get({ TableName: TableName, Key: Key })
-      .promise()
-      .then((data) => {
-        console.log(data);
-        bcrypt.compare(password, data.Item.password, (err, isMatch) => {
-          console.log('matched?', isMatch);
-          if (err) {
-            console.log('Error', err);
-            let error = {
-              log: 'Express error handler caught userController.verifyUser, bcrypt',
-              message: { err: err },
-            };
-            return next(error);
-          }
-          return next();
-        });
-      });
-    console.log('in try');
+    const { Item: userData } = await db.get({ TableName, Key });
+
+    if (!userData) {
+      return res.sendStatus(401);
+    }
+
+    const isMatch = await bcrypt.compare(password, userData.password);
+    console.log('matched?', isMatch);
+
+    if (!isMatch) {
+      return res.sendStatus(401);
+    }
+
     return next();
   } catch (err) {
     console.log('Error', err);

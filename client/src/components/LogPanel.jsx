@@ -4,22 +4,27 @@ import sampleLog from '../assets/sampleLog';
 
 const columns = [
   {
-    name: '@timestamp',
-    selector: (row) => row['@timestamp'],
-    width: '200px',
+    name: 'timestamp',
+    selector: (row) => row['timestamp'],
+    width: '180px',
+    format: d => {
+      return (new Date(d.timestamp).toLocaleString() )
+    }
   },
   {
-    name: '@message',
-    selector: (row) => row['@message'],
+    name: 'message',
+    selector: (row) => row['message'],
+    width: '800px',
+    wrap: true
   },
   {
-    name: '@logStream',
-    selector: (row) => row['@logStream'],
+    name: 'logStreamName',
+    selector: (row) => row['logStreamName'],
     width: '350px',
   },
   {
-    name: '@log',
-    selector: row => row["@log"],
+    name: 'eventId',
+    selector: row => row["eventId"],
     width:"350px"
   },
 ];
@@ -67,13 +72,16 @@ const customStyles = {
   },
 };
 
+
+
 const LogPanel = (props) => {
+
   return (
     <div className='LogPanel'>
       <h3>Log Detail:</h3>
       <DataTable
             columns={columns}
-            data={sampleLog}
+            data={props.traceLogData}
             theme="dark"
             //customStyles={customStyles}
         />

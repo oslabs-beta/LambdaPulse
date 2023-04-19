@@ -10,6 +10,7 @@ export default defineConfig({
       '/api': 'http://localhost:3000/',
       '/blahblah': 'http://localhost:3000/',
       '/createUser': 'http://localhost:3000/',
+      '/verifyUser': 'http://localhost:3000/',
     },
   },
   plugins: [react()],

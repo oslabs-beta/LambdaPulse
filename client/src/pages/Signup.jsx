@@ -8,18 +8,27 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [fullName, setFulltName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  // const [loading, setLoading] = useState(false);
+  // {loading && (
+  //   <img className='loading-spinner' src={spinner} alt='Loading' />
+  // )}
+  // setLoading(true);
+
   const navigate = useNavigate();
 
   const handleSignup = (e) => {
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      setErrorMessage('Passwords do not match');
       return;
     }
+
     const userData = {
       email,
       password,
       fullName,
     };
+    console.log(userData);
     fetch('/createUser', {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
@@ -27,17 +36,22 @@ const Signup = () => {
     })
       .then((response) => {
         console.log(response);
-        if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
-        }
-      })
-      .then((response) => {
-        if (response.status === 201) {
+        if (response.ok) {
           navigate('/dashboard');
-        } else {
-          alert('Error registering the user');
+        } else if (response.status === 409) {
+          setErrorMessage('Email already exists');
+
+          // alert('Error registering the user');
         }
       })
+
+      // .then((response) => {
+      //   if (response.status === 201) {
+      //     navigate('/dashboard');
+      //   } else {
+      //     alert('Error registering the user');
+      //   }
+      // })
       .catch((error) => {
         console.log('Error:', error);
       });
@@ -50,7 +64,15 @@ const Signup = () => {
         <div className='shape'></div>
         <div className='shape'></div>
       </div>
-      <form className='auth-form signup-form'>
+      <form
+        className='auth-form signup-form'
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSignup(e);
+        }}
+      >
+        {errorMessage && <p className='error-message'>{errorMessage}</p>}
+
         <h3>Sign Up</h3>
         <label htmlFor='fullName'>First and Last Name</label>
         <input
@@ -82,15 +104,7 @@ const Signup = () => {
           required
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-
-        <button
-          className='login-btn'
-          type='submit'
-          onClick={(e) => {
-            e.preventDefault();
-            handleSignup(e);
-          }}
-        >
+        <button className='login-btn' type='submit'>
           Sign Up
         </button>
 
