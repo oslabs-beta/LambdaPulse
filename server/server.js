@@ -12,9 +12,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
 });
 
@@ -22,9 +25,9 @@ app.get('/api', (req, res) => {
   let data = 'hello';
   res.status(200).json(data);
 });
-
 app.post('/createUser', userController.createUser, (req, res) => {
-  res.sendStatus(200);
+  console.log('in create user');
+  res.sendStatus(201);
 });
 
 app.get('/verifyUser', userController.verifyUser, (req, res) => {
@@ -43,9 +46,11 @@ app.get(
   '/getTraces',
   redisController.getRedisTraces,
   awsCredentialsController.getCredentials,
-  getTraceMiddleware.getSummary,getTraceMiddleware.getSegmentArray,getTraceMiddleware.sortSegments,
+  getTraceMiddleware.getSummary,
+  getTraceMiddleware.getSegmentArray,
+  getTraceMiddleware.sortSegments,
   (req, res) => {
-    console.log('Sending this back to the frontend:' , res.locals.nodes)
+    console.log('Sending this back to the frontend:', res.locals.nodes);
     res.status(200).json(res.locals.nodes);
   }
 );
