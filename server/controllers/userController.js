@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const { db, Users } = require('../db.config.js');
-const { v4: uuidv4 } = require('uuid');
 
 const createUser = async (req, res, next) => {
   const TableName = Users;
@@ -8,32 +7,31 @@ const createUser = async (req, res, next) => {
 
   try {
     // Check if email already exists
-    // const getResult = await db
-    //   .get({
-    //     TableName: TableName,
-    //     Key: {
-    //       email,
-    //     },
-    //   })
-    //   .promise();
-    const getResult = await new Promise((resolve, reject) => {
-      db.get(
-        {
-          TableName: TableName,
-          Key: {
-            email,
-          },
-        },
-        (err, data) => {
-          if (err) reject(err);
-          else resolve(data);
-        }
-      );
+    const getResult = await db.get({
+      TableName: TableName,
+      Key: {
+        email,
+      },
     });
+    // no need to use promises for SDK v3
+    //   .promise();
+    // const getResult = await new Promise((resolve, reject) => {
+    //   db.get(
+    //     {
+    //       TableName: TableName,
+    //       Key: {
+    //         email,
+    //       },
+    //     },
+    //     (err, data) => {
+    //       if (err) reject(err);
+    //       else resolve(data);
+    //     }
+    //   );
+    // });
 
     if (getResult.Item) {
-      res.status(409).json({ message: 'Email already exists' });
-      return;
+      return res.status(409).json({ message: 'Email already exists' });
     }
 
     // If email does not exist, create new user
@@ -46,12 +44,11 @@ const createUser = async (req, res, next) => {
       password: hashedPassword,
     };
 
-    await db
-      .put({
-        TableName: TableName,
-        Item: Item,
-      })
-      .promise();
+    await db.put({
+      TableName: TableName,
+      Item: Item,
+    });
+    //   .promise();
 
     console.log('User created successfully');
     return next();
@@ -67,30 +64,24 @@ const createUser = async (req, res, next) => {
 
 const verifyUser = async (req, res, next) => {
   const TableName = Users;
-  const { username, password } = req.body;
-  const Key = { ['user_id']: username };
-  console.log(username, password, TableName);
+  const { email, password } = req.body;
+  const Key = { email };
+  console.log(email, password, TableName);
 
   try {
-    await db
-      .get({ TableName: TableName, Key: Key })
-      .promise()
-      .then((data) => {
-        console.log(data);
-        bcrypt.compare(password, data.Item.password, (err, isMatch) => {
-          console.log('matched?', isMatch);
-          if (err) {
-            console.log('Error', err);
-            let error = {
-              log: 'Express error handler caught userController.verifyUser, bcrypt',
-              message: { err: err },
-            };
-            return next(error);
-          }
-          return next();
-        });
-      });
-    console.log('in try');
+    const { Item: userData } = await db.get({ TableName, Key });
+
+    if (!userData) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, userData.password);
+    console.log('matched?', isMatch);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
     return next();
   } catch (err) {
     console.log('Error', err);
