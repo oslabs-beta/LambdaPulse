@@ -192,7 +192,7 @@ const main = (segment) => {
   const arrayOfSegmentNodes = createAllNodes(segmentData);
   const root = createRoot(arrayOfSegmentNodes);
   addChildChildren(root, arrayOfSegmentNodes);
-  return root;
+  return [root, segmentData];
 };
 
 module.exports = main;
