@@ -8,38 +8,39 @@ import './Login.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const navigate = useNavigate();
 
+  // const verifyLogin = (e) => {
+  //   fetch('/api')
+  //     .then((data) => data.json())
+  //     .then((res) => {
+  //       console.log(res);
+  //       navigate('/dashboard');
+  //     });
+  // };
   const verifyLogin = (e) => {
-    fetch('/api')
-      .then((data) => data.json())
-      .then((res) => {
-        console.log(res);
-        navigate('/dashboard');
+    const userData = {
+      email,
+      password,
+    };
+    fetch('/verifyUser', {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(userData),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          navigate('/dashboard');
+        } else if (response.status === 401) {
+          setErrorMessage('Invalid password or email');
+        }
+      })
+      .catch((err) => {
+        console.log('Error:', err);
       });
   };
-  //   const verifyLogin = (e) => {
-  //   const userData = {
-  //     email,
-  //     password,
-  //   };
-  //   fetch('/verifyUser', {
-  //     method: 'POST',
-  //     headers: { 'Content-type': 'application/json' },
-  //     body: JSON.stringify(userData),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       if (response.status === 200) {
-  //         navigate('/dashboard');
-  //       } else {
-  //         alert('wrong email or password');
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log('Error:', err);
-  //     });
-
   return (
     <div>
       <NavBar />
@@ -47,33 +48,36 @@ const Login = () => {
         <div className='shape'></div>
         <div className='shape'></div>
       </div>
-      <form className='auth-form login-form'>
+      <form
+        className='auth-form login-form'
+        onSubmit={(e) => {
+          e.preventDefault();
+          verifyLogin(e);
+        }}
+      >
+        {errorMessage && <p className='error-message'>{errorMessage}</p>}
+
         <h3>Login</h3>
 
         <label htmlFor='email'>Email</label>
         <input
           type='text'
           id='email'
+          required
           onChange={(e) => setEmail(e.target.value)}
-          autocomplete='off'
+          autoComplete='off'
         />
 
         <label htmlFor='password'>Password</label>
         <input
           type='password'
           id='password'
+          required
           onChange={(e) => setPassword(e.target.value)}
-          autocomplete='off'
+          autoComplete='off'
         />
 
-        <button
-          className='login-btn'
-          type='submit'
-          onClick={(e) => {
-            e.preventDefault();
-            verifyLogin(e);
-          }}
-        >
+        <button className='login-btn' type='submit'>
           Log In
         </button>
 

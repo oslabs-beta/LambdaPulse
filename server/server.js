@@ -30,7 +30,7 @@ app.post('/createUser', userController.createUser, (req, res) => {
   res.sendStatus(201);
 });
 
-app.get('/verifyUser', userController.verifyUser, (req, res) => {
+app.post('/verifyUser', userController.verifyUser, (req, res) => {
   //successful login
   // res.redirect('homepage');
   res.sendStatus(200);
