@@ -47,7 +47,6 @@ body {
 }
 
 .auth-form * {
-  font-family: 'Poppins', sans-serif;
   color: #ffffff;
   letter-spacing: 0.5px;
   outline: none;
@@ -92,9 +91,11 @@ input {
 .login-btn {
   color: #080710;
   margin-top: 30px;
+  background-color: #ffffff;
 }
 .signup-btn {
   color: #080710;
+  background-color: #ffffff;
 }
 .already-have-account {
   margin-top: 10px;
