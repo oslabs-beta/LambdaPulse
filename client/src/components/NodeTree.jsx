@@ -116,7 +116,6 @@ const NodeTree = (props) => {
       <Tree data={nodeData}
               orientation={"vertical"}
               pathClassFunc={getDynamicPathClass}
-              onClick={() => console.log('yoooo')}  //not working
               translate={initialTranslate}
               collapsible={false} 
               zoom={1}

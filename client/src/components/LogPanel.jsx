@@ -75,7 +75,6 @@ const customStyles = {
 
 
 const LogPanel = (props) => {
-  console.log('logPanel logs: ', props)
 
   return (
     <div className='LogPanel'>

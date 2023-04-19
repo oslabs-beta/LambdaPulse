@@ -36,8 +36,6 @@ const Dashboard = () => {
           })
           .then(result => result.json())
           .then(data => {
-            console.log('Fetched ',data)
-            console.log(JSON.stringify(data));
             if (data.length) {
               setNodeData(data[currentTrace]);
               setTraceList(data);
@@ -53,7 +51,6 @@ const Dashboard = () => {
       },[refresh]);
 
       useEffect(()=> {
-        console.log('newTrace', )
         setNodeData(traceList[currentTrace])
       },[currentTrace])
     
