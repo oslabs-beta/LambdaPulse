@@ -20,9 +20,11 @@ const Dashboard = () => {
     const [currentPage,setCurrentPage] = useState("Home");
     const [currentTrace,setCurrentTrace] = useState(0)
     const [traceList,setTraceList] = useState({});
-    const [nodeData,setNodeData] = useState(null)
+    const [nodeData,setNodeData] = useState(null);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
+      console.log('FIRED OFF USEFFECT');
         fetch('/getTraces',
           {
             method: 'GET',
@@ -44,7 +46,12 @@ const Dashboard = () => {
             }
           })
           .catch(err => console.log(err))
-      },[currentTrace]);
+      },[refresh]);
+
+      useEffect(()=> {
+        console.log('newTrace', )
+        setNodeData(traceList[currentTrace])
+      },[currentTrace])
     
 
     function Body(){
@@ -52,8 +59,12 @@ const Dashboard = () => {
             <div className='body'>
                 {currentPage === "Home" && <HomeDisplay traces={traceList} currentTrace={currentTrace} />}
                 {currentPage === "EventGraph" && <EventGraph nodeData={nodeData}/>}
-                {currentPage === "TraceList" && <TraceList traces={traceList} currentTrace={currentTrace} setCurrentTrace={setCurrentTrace}/>}
-                {currentPage === "Metrics" && <Metrics />}
+                {currentPage === "TraceList" && <TraceList 
+                  traces={traceList}
+                  setCurrentTrace={setCurrentTrace}
+                  setRefresh ={setRefresh}
+                  refresh = {refresh}
+                  />}
             </div>
         )
     }

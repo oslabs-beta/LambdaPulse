@@ -101,9 +101,19 @@ const getStartLocale = (startSec) => {
 
 const flattenTrace = (trace) => { 
   const result = [];
-  console.log('flattening ' + trace)
+  if (!trace) {
+    console.log('Can\'t flatten trace; it doesn\'t exist!');
+  }
   
   const process = (node) => {
+    if (!node) {
+      console.log('Error! No node...')
+      return;
+    }
+    if (!node.fullData) {
+      console.log('Error! Not getting full data from node...');
+      return;
+    }
 
     const nr = {};
     const n = node.fullData.Document;
