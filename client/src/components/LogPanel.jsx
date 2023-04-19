@@ -4,7 +4,7 @@ import sampleLog from '../assets/sampleLog';
 
 const columns = [
   {
-    name: '"@timestamp"',
+    name: '@timestamp',
     selector: (row) => row['@timestamp'],
     width: '200px',
   },
@@ -18,37 +18,34 @@ const columns = [
     width: '350px',
   },
   {
-    name: '"@log"',
-    selector: (row) => row['@log'],
-    width: '350px',
+    name: '@log',
+    selector: row => row["@log"],
+    width:"350px"
   },
 ];
 
-createTheme(
-  'solarized',
-  {
-    text: {
-      primary: '#ff3300',
-      secondary: '#2aa198',
-    },
-    background: {
-      default: '#222222',
-    },
-    context: {
-      background: '#cb4b16',
-      text: '#FFFFFF',
-    },
-    divider: {
-      default: '#073642',
-    },
-    action: {
-      button: 'rgba(0,0,0,.54)',
-      hover: 'rgba(0,0,0,.08)',
-      disabled: 'rgba(0,0,0,.12)',
-    },
+createTheme('dark', {
+  text: {
+    primary: '#dddddd',
+    secondary: '#2aa198',
   },
-  'dark'
-);
+  background: {
+    default: '#222222',
+  },
+  context: {
+    background: '#cb4b16',
+    text: '#FFFFFF',
+  },
+  divider: {
+    default: '#073642',
+  },
+  action: {
+    button: 'rgba(0,0,0,.54)',
+    hover: 'rgba(0,0,0,.08)',
+    disabled: 'rgba(0,0,0,.12)',
+  },
+}, 'dark');
+
 
 const customStyles = {
   rows: {
@@ -75,11 +72,11 @@ const LogPanel = (props) => {
     <div className='LogPanel'>
       <h3>Log Detail:</h3>
       <DataTable
-        columns={columns}
-        data={sampleLog}
-        theme='solarized'
-        customStyles={customStyles}
-      />
+            columns={columns}
+            data={sampleLog}
+            theme="dark"
+            //customStyles={customStyles}
+        />
     </div>
   );
 };

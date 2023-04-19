@@ -44,6 +44,7 @@ app.post('/setLogs', redisController.setLogs, (req, res) => {
 
 app.get(
   '/getTraces',
+  redisController.getRedisTraces,
   awsCredentialsController.getCredentials,
   getTraceMiddleware.getSummary,
   getTraceMiddleware.getSegmentArray,
@@ -53,6 +54,10 @@ app.get(
     res.status(200).json(res.locals.nodes);
   }
 );
+
+app.get('/clearTraces', redisController.clearTraces, (req, res) => {
+  res.sendStatus(200);
+});
 
 app.get('/getLogs', redisController.getLogs, (req, res) => {
   //successful login
