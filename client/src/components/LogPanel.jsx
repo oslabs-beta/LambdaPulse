@@ -4,29 +4,27 @@ import sampleLog from '../assets/sampleLog';
 
 const columns = [
   {
-    name: '@timestamp',
+    name: 'timestamp',
     selector: (row) => row['timestamp'],
-    width: '200px',
-    accessor: d => {
-      return Moment(d.timestamp)
-        .local()
-        .format("DD-MM-YYYY hh:mm:ss a")
+    width: '180px',
+    format: d => {
+      return (new Date(d.timestamp).toLocaleString() )
     }
   },
   {
-    name: '@message',
+    name: 'message',
     selector: (row) => row['message'],
     width: '800px',
     wrap: true
   },
   {
-    name: '@logStream',
-    selector: (row) => row['logStream'],
+    name: 'logStreamName',
+    selector: (row) => row['logStreamName'],
     width: '350px',
   },
   {
-    name: '@log',
-    selector: row => row["log"],
+    name: 'eventId',
+    selector: row => row["eventId"],
     width:"350px"
   },
 ];
