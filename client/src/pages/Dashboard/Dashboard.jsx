@@ -23,6 +23,8 @@ const Dashboard = () => {
     const [nodeData,setNodeData] = useState(null);
     const [refresh, setRefresh] = useState(false);
 
+    
+
     useEffect(() => {
       console.log('FIRED OFF USEFFECT');
         fetch('/getTraces',
@@ -35,6 +37,7 @@ const Dashboard = () => {
           .then(result => result.json())
           .then(data => {
             console.log('Fetched ',data)
+            console.log(JSON.stringify(data));
             if (data.length) {
               setNodeData(data[currentTrace]);
               setTraceList(data);
@@ -43,6 +46,7 @@ const Dashboard = () => {
               console.log('Fetched nothing, defaulting to placeholder data')
               setNodeData(sampleTraces[currentTrace]);
               setTraceList(sampleTraces);
+              
             }
           })
           .catch(err => console.log(err))
@@ -58,7 +62,7 @@ const Dashboard = () => {
         return(
             <div className='body'>
                 {currentPage === "Home" && <HomeDisplay traces={traceList} currentTrace={currentTrace} />}
-                {currentPage === "EventGraph" && <EventGraph nodeData={nodeData}/>}
+                {currentPage === "EventGraph" && <EventGraph nodeData={nodeData} traceLogData={traceList[currentTrace].logs}/>}
                 {currentPage === "TraceList" && <TraceList 
                   traces={traceList}
                   setCurrentTrace={setCurrentTrace}

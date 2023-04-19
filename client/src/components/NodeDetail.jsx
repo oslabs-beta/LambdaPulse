@@ -39,6 +39,7 @@ const NodeDetail = (props) => {
       <div className='nd__attribute'><b>req url: </b>{cn.http && cn.http.request? cn.http.request.url : ''}</div>
       <div className='nd__attribute'><b>req method: </b>{cn.http && cn.http.request? cn.http.request.method: ''}</div>
       <div className='nd__attribute'><b>res status: </b>{cn.http && cn.http.response? cn.http.response.status: ''}</div>
+      <div className='nd__attribute'><b>time taken: </b>{cn.time_taken}</div>
       {subSegments}
     </div>
   }
