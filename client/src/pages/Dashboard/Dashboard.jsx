@@ -64,6 +64,7 @@ const Dashboard = () => {
                   setCurrentTrace={setCurrentTrace}
                   setRefresh ={setRefresh}
                   refresh = {refresh}
+                  currentTrace={currentTrace}
                   />}
             </div>
         )
