@@ -5,6 +5,14 @@ const {
   GetTraceSummariesCommand,
   BatchGetTracesCommand,
 } = require('@aws-sdk/client-xray');
+//redis client to add traces to redis
+const Redis = require('redis');
+const redisClient = Redis.createClient();
+redisClient.connect();
+redisClient.on('error', (err) => {
+    console.error(err);
+  });
+
 
 const main = require('./sortingSegments');
 
@@ -48,6 +56,7 @@ const main = require('./sortingSegments');
 
 const getTraceMiddleware = {
   getSummary: async (req, res, next) => {
+    if (res.locals.redisTraces != undefined) return next();
     console.log('in getTraceMiddleware');
 
     const xClient = new XRayClient({
@@ -84,6 +93,7 @@ const getTraceMiddleware = {
 
   // get segment data
   getSegmentArray: async (req, res, next) => {
+    if (res.locals.redisTraces != undefined) return next();
     console.log('in getSegmentArray');
     const xClient = new XRayClient({
       credentials: res.locals.awsCredentials,
@@ -100,7 +110,7 @@ const getTraceMiddleware = {
     try {
       let fullTraceArray = [];
 
-      const currTraceIds = [];
+      let currTraceIds = [];
       while (res.locals.traceArray.length) {
         if (currTraceIds.length < 5)
           currTraceIds.push(res.locals.traceArray.shift());
@@ -124,6 +134,10 @@ const getTraceMiddleware = {
   },
 
   sortSegments: (req, res, next) => {
+    if (res.locals.redisTraces != undefined) {
+      res.locals.nodes = res.locals.redisTraces;
+      return next();
+    }
     console.log('in sortedSegments');
     try {
       const allNodes = [];
@@ -136,6 +150,13 @@ const getTraceMiddleware = {
 
       res.locals.nodes = allNodes;
       console.log(allNodes);
+      try{
+        console.log('HOOBLA')
+        redisClient.set("Traces", JSON.stringify(allNodes));
+        console.log("HOOBLA PT 2")
+      } catch (err) {
+        next(err);
+      }
       next();
     } catch (err) {
       next(err);
