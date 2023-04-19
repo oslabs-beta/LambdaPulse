@@ -98,13 +98,13 @@ const HomeDisplay = (props) => {
       if (n.http && n.http.response && n.http.response.status >= 200 && n.http.response.status < 300) successCount++;
       else if (n.http && n.http.response && ( n.http.response.status <200 || n.http.response.status >= 300)) errorCount++;
     }
+
     let sumDuration = 0;
     let countDuration = 0;
     for (const t in props.traces) {
       const n = props.traces[t];
-      if (n.fullData && n.fullData.Document.start_time) {
-        let duration = n.fullData.Document.end_time - n.fullData.Document.start_time;
-        sumDuration += duration;
+      if (n.averageTime) {
+        sumDuration += n.averageTime;
         countDuration++;
       }
     }
