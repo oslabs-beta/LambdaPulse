@@ -10,8 +10,16 @@ const {
   FilterLogEventsCommand,
 } = require('@aws-sdk/client-cloudwatch-logs');
 const aws = require('aws-sdk');
+
+const Redis = require('redis');
+const redisClient = Redis.createClient();
+redisClient.connect();
+redisClient.on('error', (err) => {
+  console.error(err);
+});
+
 const main = require('./sortingSegments');
-const { RedisFlushModes } = require('redis');
+//redis client to add traces to redis
 
 // const awsCredentials = {
 //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -54,55 +62,13 @@ const { RedisFlushModes } = require('redis');
 console.log('out of get logs');
 const getTraceMiddleware = {
   getSummary: async (req, res, next) => {
+    if (res.locals.redisTraces != undefined) return next();
     console.log('in getTraceMiddleware');
 
     const xClient = new XRayClient({
       credentials: res.locals.awsCredentials,
       region: 'us-east-1',
     });
-    // experimental below
-    // async function getLogs(traceId, logGroupName) {
-    //   const endTime = new Date();
-    //   const startTime = new Date(endTime.getTime() - 24 * 60 * 60 * 1000);
-
-    //   const cloudwatchlogs = new aws.CloudWatchLogs({
-    //     credentials: res.locals.awsCredentials,
-    //     region: 'us-east-1',
-    //   });
-
-    //   console.log(endTime, 'loggin the endtime');
-
-    //   // original params
-    //   const params = {
-    //     logGroupName,
-    //     // filterPattern: `{ $.message = "*${traceId}*" }`,
-    //     startTime: startTime.getTime(),
-    //     endTime: endTime.getTime(),
-    //   };
-
-    //   // original try
-    //   try {
-    //     const data = await cloudwatchlogs.filterLogEvents(params).promise();
-    //     console.log(data);
-    //     data.events.forEach((segEvent) => {
-    //       // console.log(Object.keys(segEvent));
-    //       console.log(segEvent.logStreamName, '\n', segEvent.message);
-    //       // console.log(segEvent.message);
-    //     });
-    //   } catch (error) {
-    //     console.error('Error fetching logs:', error);
-    //   }
-    // }
-
-    // about to call get logs
-    // console.log('going to get logs ');
-    // const result = await getLogs(
-    //   '1-643ee6f7-40318f28775180c735c8fb77',
-    //   '/aws/lambda/todo-list-app-dev-deleteTask'
-    // );
-    // console.log('out of get logs');
-
-    // along with cloud watch experimental
     const getTraceSummary = async () => {
       console.log('in getTracesummary');
       const endTime = new Date();
@@ -138,6 +104,7 @@ const getTraceMiddleware = {
 
   // get segment data
   getSegmentArray: async (req, res, next) => {
+    if (res.locals.redisTraces != undefined) return next();
     console.log('in getSegmentArray');
     const xClient = new XRayClient({
       credentials: res.locals.awsCredentials,
@@ -168,7 +135,7 @@ const getTraceMiddleware = {
         const result = await getTraceDetails(currTraceIds);
         fullTraceArray = fullTraceArray.concat(result.Traces);
       }
-      // console.log(fullTraceArray, 'this is full trace array');
+      console.log(fullTraceArray, 'this is full trace array');
       res.locals.traceSegmentData = fullTraceArray;
       next();
     } catch (err) {
@@ -177,6 +144,10 @@ const getTraceMiddleware = {
   },
 
   sortSegments: async (req, res, next) => {
+    if (res.locals.redisTraces != undefined) {
+      res.locals.nodes = res.locals.redisTraces;
+      return next();
+    }
     console.log('in sortedSegments');
     try {
       const allNodes = [];
@@ -245,6 +216,14 @@ const getTraceMiddleware = {
         }
       }
       res.locals.nodes = allNodes;
+
+      try {
+        console.log('HOOBLA');
+        redisClient.set('Traces', JSON.stringify(allNodes));
+        console.log('HOOBLA PT 2');
+      } catch (err) {
+        next(err);
+      }
       next();
     } catch (err) {
       next(err);
