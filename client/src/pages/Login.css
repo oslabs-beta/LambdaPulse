@@ -110,3 +110,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.error-message {
+  color: #f09819;
+}

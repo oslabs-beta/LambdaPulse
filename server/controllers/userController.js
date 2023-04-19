@@ -4,6 +4,7 @@ const { db, Users } = require('../db.config.js');
 const createUser = async (req, res, next) => {
   const TableName = Users;
   const { fullName, email, password } = req.body;
+  console.log(fullName, email, password);
 
   try {
     // Check if email already exists
@@ -31,7 +32,7 @@ const createUser = async (req, res, next) => {
     // });
 
     if (getResult.Item) {
-      return res.status(409).json({ message: 'Email already exists' });
+      return res.sendStatus(409);
     }
 
     // If email does not exist, create new user
@@ -72,14 +73,14 @@ const verifyUser = async (req, res, next) => {
     const { Item: userData } = await db.get({ TableName, Key });
 
     if (!userData) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(401).json({ message: 'User not found' });
     }
 
     const isMatch = await bcrypt.compare(password, userData.password);
     console.log('matched?', isMatch);
 
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid password' });
+      return res.status(401).json({ message: 'Invalid password or email' });
     }
 
     return next();
