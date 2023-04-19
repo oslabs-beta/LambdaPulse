@@ -102,15 +102,20 @@ const parseData = (segmentArray) => {
   return parsedDocumentData;
 };
 
+const reuslt = parseData(realData);
+console.log(reuslt);
+
 function Node(segment) {
   this.id = segment.Document.id;
   this.name = segment.Document.name;
   this.parent_id = segment.Document.parent_id;
+  this.time_taken =
+    (segment.Document.end_time - segment.Document.start_time) * 1000;
   this.subsegments = segment.Document.subsegments;
   this.children = [];
   this.origin = segment.Document.origin;
   this.http = segment.Document.http;
-  this.fullData = segment;
+  // this.fullData = segment;
 }
 
 // creates Nodes from each segment

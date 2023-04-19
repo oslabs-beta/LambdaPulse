@@ -177,6 +177,12 @@ const getTraceMiddleware = {
               // add the logs onto currRoot[0].logs = logs or something
 
               const logs = await getLogs(requestId, segmentName);
+
+              logs.forEach((log) => {
+                if (log.message.includes('START')) {
+                  currRoot[0].cold_start = true;
+                }
+              });
               currRoot[0].logs = logs;
             }
           }
