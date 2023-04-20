@@ -91,76 +91,57 @@ const HomeDisplay = (props) => {
   //errors
   //line chart of invocations across time?
 
-  const invocationCount = props.traces ? props.traces.length : 0;
-  let successCount = 0;
-  let errorCount = 0;
-  for (const t in props.traces) {
-    const n = props.traces[t];
-    if (
-      n.http &&
-      n.http.response &&
-      n.http.response.status >= 200 &&
-      n.http.response.status < 300
-    )
-      successCount++;
-    else if (
-      n.http &&
-      n.http.response &&
-      (n.http.response.status < 200 || n.http.response.status >= 300)
-    )
-      errorCount++;
-  }
-  let sumDuration = 0;
-  let countDuration = 0;
-  for (const t in props.traces) {
-    const n = props.traces[t];
-    if (n.fullData && n.fullData.Document.start_time) {
-      let duration =
-        n.fullData.Document.end_time - n.fullData.Document.start_time;
-      sumDuration += duration;
-      countDuration++;
+    const invocationCount = props.traces ? props.traces.length : 0;
+    let successCount = 0;
+    let errorCount = 0;
+    for (const t in props.traces) {
+      const n = props.traces[t];
+      if (n.http && n.http.response && n.http.response.status >= 200 && n.http.response.status < 300) successCount++;
+      else if (n.http && n.http.response && ( n.http.response.status <200 || n.http.response.status >= 300)) errorCount++;
     }
-  }
-  const avgDuration =
-    sumDuration > 0
-      ? Math.floor((sumDuration / countDuration) * 1000) / 1000
-      : 0;
 
-  const origins = tallyToCircle(
-    tallyOrigins(flattenTrace(props.traces[props.currentTrace]))
-  );
+    let sumDuration = 0;
+    let countDuration = 0;
+    for (const t in props.traces) {
+      const n = props.traces[t];
+      if (n.averageTime) {
+        sumDuration += n.averageTime;
+        countDuration++;
+      }
+    }
+    const avgDuration = sumDuration > 0 ? Math.floor(sumDuration / countDuration * 1000)/1000 : 0;
+  
+    const origins = tallyToCircle(tallyOrigins(flattenTrace(props.traces[props.currentTrace])));
+    
+    
 
-  return (
-    <div className={'metrics__home__container'}>
-      {props.loading && (
-        <img className='loading-spinner' src={spinner} alt='Loading' />
-      )}
-      <SimpleDataDisplay label={'Invocations'} metric={invocationCount} />
-      <SimpleDataDisplay label={'Successful'} metric={successCount} />
-      <SimpleDataDisplay label={'Errors'} metric={errorCount} />
-      <SimpleDataDisplay label={'Avg Duration'} metric={avgDuration} />
-      <div className={'metrics__visual__display'}>
-        <PieChart
-          data={origins}
-          viewBoxSize={[100, 100]}
-          center={[50, 50]}
-          labelPosition={50}
-          lengthAngle={360}
-          lineWidth={35}
-          paddingAngle={0}
-          radius={50}
-          startAngle={0}
-          label={(props) => {
-            return props.dataEntry.title;
-          }}
-          labelStyle={{
-            fill: 'white',
-            fontSize: '4px',
-          }}
-        />
-      </div>
-    </div>
-  );
-};
+    return (
+        <div className={'metrics__home__container'}>
+            <SimpleDataDisplay label={'Invocations'} metric={invocationCount} />
+            <SimpleDataDisplay label={'Successful'} metric={successCount} />
+            <SimpleDataDisplay label={'Errors'} metric={errorCount} />
+            <SimpleDataDisplay label={'Avg Duration'} metric={avgDuration} />
+            <div className={'metrics__visual__display'}>
+              <PieChart
+                data={origins}
+                viewBoxSize={[100,100]}
+                center={[50,50]}
+                labelPosition={50}
+                lengthAngle={360}
+                lineWidth={35}
+                paddingAngle={0}
+                radius={50}
+                startAngle={0}
+                label={(props) => {return props.dataEntry.title} }
+                labelStyle={{
+                    fill: 'white',
+                    fontSize: '4px'
+               }}
+                />
+            </div>
+
+        </div>
+    )
+}
 
 export default HomeDisplay;

@@ -17,6 +17,7 @@ const NodeDetail = (props) => {
     if (cn.http && cn.http.request) nodeDetails.push(<div className='nd__attribute'><b>req method: </b>{cn.http.request.method}</div>);
     if (cn.http && cn.http.response) nodeDetails.push(<div className='nd__attribute'><b>res status: </b>{cn.http.response.status}</div>);
     if (cn.time_taken) nodeDetails.push(<div className='nd__attribute'><b>time taken ms: </b>{cn.time_taken}</div>);
+    if (cn.averageTime) nodeDetails.push(<div className='nd__attribute'><b>average time ms: </b>{cn.averageTime}</div>);
     if (cn.cold_start) nodeDetails.push(<div className='nd__attribute'><b>cold start: </b>{cn.cold_start}</div>);
     if (cn.fullData && cn.fullData.Document.error) nodeDetails.push(<div className='nd__attribute'><b>error: </b>{cn.fullData.Document.error? 'yes' : 'no'}</div>);
     if (cn.fullData && cn.fullData.Document.cause) {

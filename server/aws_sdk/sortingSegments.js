@@ -109,8 +109,9 @@ function Node(segment) {
   this.id = segment.Document.id;
   this.name = segment.Document.name;
   this.parent_id = segment.Document.parent_id;
-  this.time_taken =
-    (segment.Document.end_time - segment.Document.start_time) * 1000;
+  this.time_taken = Math.round(
+    (segment.Document.end_time - segment.Document.start_time) * 1000
+  );
   this.subsegments = segment.Document.subsegments;
   this.children = [];
   this.origin = segment.Document.origin;
@@ -178,6 +179,14 @@ const checkForSubsegments = (node, subsegment) => {
     }
   }
 };
+
+const getAverageOfTrace = (nodeArray) => {
+  let total = 0;
+  nodeArray.forEach((node) => {
+    total += node.time_taken;
+  });
+  return total / nodeArray.length;
+};
 // problem
 // if a segment has a child, it might not be a subsegment,
 // but a subsegment of the subsegment
@@ -195,7 +204,9 @@ const main = (segment) => {
   if (!segment) return;
   const segmentData = parseData(segment);
   const arrayOfSegmentNodes = createAllNodes(segmentData);
+  const averageTimeTaken = getAverageOfTrace(arrayOfSegmentNodes);
   const root = createRoot(arrayOfSegmentNodes);
+  root.averageTime = averageTimeTaken;
   addChildChildren(root, arrayOfSegmentNodes);
   return [root, segmentData];
 };

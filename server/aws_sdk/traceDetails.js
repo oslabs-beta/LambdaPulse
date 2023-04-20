@@ -139,7 +139,7 @@ const getTraceMiddleware = {
       res.locals.traceSegmentData = fullTraceArray;
       next();
     } catch (err) {
-      next(err);
+      next({log :err});
     }
   },
 
