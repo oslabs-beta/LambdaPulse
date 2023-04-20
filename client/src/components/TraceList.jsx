@@ -1,4 +1,5 @@
 import DebugTraceDisplay from './DebugTraceDisplay'
+import errorImage from '../assets/error-svgrepo-com.svg'
 
 
 const getFromRight = (s) => {
@@ -14,6 +15,18 @@ const getFromRight = (s) => {
   return result;
 }
 
+const findErrorsInTrace = (trace) => {
+  let errors = 0;
+
+  const process = (node) => {
+    if (node.fullData && node.fullData.Document.error) errors++;
+    if (node.children) node.children.forEach((n) => {process(n)})
+  }
+
+  process(trace);
+  return errors;
+}
+
 
 function TraceList (props) {
     
@@ -23,7 +36,24 @@ function TraceList (props) {
         console.log(url);
         const endpt = getFromRight(url)
         console.log(endpt);
-        traces.push(<button key={'tb'+Math.random()} onClick={() => props.setCurrentTrace(n)}>{endpt + ' - ' + props.traces[n].id}</button>)
+        let errors = findErrorsInTrace(props.traces[n]);
+        traces.push(<button key={'tb'+Math.random()} 
+                            onClick={() => props.setCurrentTrace(n)}>
+                            <span>{endpt + ' - ' + 
+                                props.traces[n].id
+                                }
+                            </span>
+                            <span style={{marginLeft: '4px'}}>
+                                {
+                                    (errors ? (<img src={errorImage} width='16px'></img>) : '')
+                                }
+                            </span>
+                            <span style={{color: 'white', fontSize: 'x-small'}}>
+                                {
+                                    (errors ? (' (' + errors + ' errors )') : '')
+                                }
+                            </span>
+                        </button>)
     }
 
     function refreshData() {
