@@ -1,5 +1,6 @@
 import DebugTraceDisplay from './DebugTraceDisplay'
-import errorImage from '../assets/error-svgrepo-com.svg'
+import spinner from '../assets/pulse-1.1s-200px.svg';
+import './Homedisplay.css';import errorImage from '../assets/error-svgrepo-com.svg'
 
 
 const getFromRight = (s) => {
@@ -56,28 +57,28 @@ function TraceList (props) {
                         </button>)
     }
 
-    function refreshData() {
-        //clears Traces table from redis
-        fetch('/clearTraces',
-        {
-            method: 'GET',
-        })
-        .then(result =>  {
-            console.log(result);
-        })
-        //changes refresh which fires off useEffect(in dashboard.jsx) to fetch new data
-        props.setRefresh(!props.refresh)
+  function refreshData() {
+    //clears Traces table from redis
+    fetch('/clearTraces', {
+      method: 'GET',
+    }).then((result) => {
+      console.log(result);
+    });
+    //changes refresh which fires off useEffect(in dashboard.jsx) to fetch new data
+    props.setRefresh(!props.refresh);
+  }
 
-    }
+  return (
+    <div className='trace-list-container'>
+      <p>TraceList</p>
+      {props.loading && (
+        <img className='loading-spinner' src={spinner} alt='Loading' />
+      )}
+      <button onClick={() => refreshData()}>Refresh Data</button>
+      {traces}
 
-    return (
-        <div>
-            <p>TraceList</p>
-            <button onClick={()=>refreshData()}>Refresh Data</button>
-            {traces}
-
-            <DebugTraceDisplay trace={props.traces[props.currentTrace]} />
-        </div>
-    )
+      <DebugTraceDisplay trace={props.traces[props.currentTrace]} />
+    </div>
+  );
 }
 export default TraceList;
