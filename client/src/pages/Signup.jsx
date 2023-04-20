@@ -109,7 +109,11 @@ const Signup = () => {
         </button>
 
         <p className='already-have-account'>Already have an account?</p>
-        <button className='signup-btn' onClick={() => navigate('/')}>
+        <button
+          className='btn-login'
+          onClick={() => navigate('/')}
+          style={{ margin: 0 }}
+        >
           LOGIN
         </button>
       </form>
