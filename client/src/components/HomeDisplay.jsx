@@ -117,6 +117,7 @@ const HomeDisplay = (props) => {
 
     return (
         <div className={'metrics__home__container'}>
+            {props.loading && (<img className='loading-spinner' src={spinner} alt='Loading' />)}
             <SimpleDataDisplay label={'Invocations'} metric={invocationCount} />
             <SimpleDataDisplay label={'Successful'} metric={successCount} />
             <SimpleDataDisplay label={'Errors'} metric={errorCount} />
