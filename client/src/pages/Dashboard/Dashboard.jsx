@@ -61,6 +61,20 @@ const Dashboard = () => {
     setNodeData(traceList[currentTrace]);
   }, [currentTrace]);
 
+  function logout() {
+    fetch('/logout', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if(response.status === 200) {
+        navigate('/');
+      }
+    })
+  }
+
   function Body() {
     return (
       <div className='body'>
@@ -109,6 +123,7 @@ const Dashboard = () => {
           <button>
             <img src={settingsIcon} width='16px'></img>
           </button>
+          <button onClick={()=>logout()}>Logout</button>
         </div>
         <div id='bodyContent'>
           <Body />

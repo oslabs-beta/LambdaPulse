@@ -28,6 +28,8 @@ app.get('/api', (req, res) => {
   let data = 'hello';
   res.status(200).json(data);
 });
+
+
 app.post('/createUser', userController.createUser, jwtController.createJwt, (req, res) => {
   console.log('in create user');
   res.sendStatus(201);
@@ -38,6 +40,8 @@ app.post('/verifyUser', userController.verifyUser, jwtController.createJwt, (req
   // res.redirect('homepage');
   res.sendStatus(200);
 });
+
+app.get('/logout', userController.logout);
 
 app.post('/setLogs', redisController.setLogs, (req, res) => {
   //successful login
@@ -68,6 +72,9 @@ app.get('/getLogs', redisController.getLogs, (req, res) => {
   // res.redirect('homepage');
   res.status(200).json(res.locals.logs);
 });
+
+
+
 app.get('/getErrLogs', redisController.getErrLogs, (req, res) => {
   //successful login
   // res.redirect('homepage');
