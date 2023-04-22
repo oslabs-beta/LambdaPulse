@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { db, Users } = require('../db.config.js');
+const jwt = require("jsonwebtoken");
 
 const createUser = async (req, res, next) => {
   const TableName = Users;
@@ -52,6 +53,7 @@ const createUser = async (req, res, next) => {
     //   .promise();
 
     console.log('User created successfully');
+    res.locals.email = email;
     return next();
   } catch (err) {
     console.log('Error', err);
@@ -79,10 +81,11 @@ const verifyUser = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, userData.password);
     console.log('matched?', isMatch);
 
+
     if (!isMatch) {
       return res.sendStatus(401);
     }
-
+    res.locals.email = userData.email;
     return next();
   } catch (err) {
     console.log('Error', err);

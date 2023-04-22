@@ -6,10 +6,13 @@ const userController = require('./controllers/userController');
 const redisController = require('./controllers/redisController');
 const awsCredentialsController = require('./controllers/awsCredentialsController');
 const getTraceMiddleware = require('./aws_sdk/traceDetails');
+const jwtController = require('./controllers/jwtController');
+const cookieParser = require('cookie-parser');
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -25,12 +28,12 @@ app.get('/api', (req, res) => {
   let data = 'hello';
   res.status(200).json(data);
 });
-app.post('/createUser', userController.createUser, (req, res) => {
+app.post('/createUser', userController.createUser, jwtController.createJwt, (req, res) => {
   console.log('in create user');
   res.sendStatus(201);
 });
 
-app.post('/verifyUser', userController.verifyUser, (req, res) => {
+app.post('/verifyUser', userController.verifyUser, jwtController.createJwt, (req, res) => {
   //successful login
   // res.redirect('homepage');
   res.sendStatus(200);
@@ -44,6 +47,7 @@ app.post('/setLogs', redisController.setLogs, (req, res) => {
 
 app.get(
   '/getTraces',
+  jwtController.verifyJwt,
   redisController.getRedisTraces,
   awsCredentialsController.getCredentials,
   getTraceMiddleware.getSummary,
