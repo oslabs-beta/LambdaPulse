@@ -226,6 +226,8 @@ const getTraceMiddleware = {
       }
       res.locals.nodes = allNodes;
       const userId = res.locals.userId;
+      console.log('userId:', userId);
+
       console.log('this is nodes', allNodes);
       try {
         console.log('HOOBLA');
