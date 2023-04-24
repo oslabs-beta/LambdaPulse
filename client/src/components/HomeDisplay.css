@@ -25,3 +25,23 @@
   transform: translate(-50%, -50%);
   z-index: 100;
 }
+
+.datepicker__override {
+  color: #ffffff;
+}
+
+.datepicker__popper__override div div div  {
+  background-color: #232323;
+  color: #ffffff
+}
+
+.filter__label {
+  font-size: x-small;
+  float: left;
+}
+
+.filter__container {
+  display: inline-block;
+  margin-left: 10px;
+  margin-right: 10px;
+}

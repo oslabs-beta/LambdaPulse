@@ -16,6 +16,7 @@ import traceListIcon from '../../assets/list-svgrepo-com.svg';
 import metricsIcon from '../../assets/chart-bar-svgrepo-com.svg';
 import teamIcon from '../../assets/team-svgrepo-com.svg';
 import settingsIcon from '../../assets/settings-svgrepo-com.svg';
+import logoutIcon from '../../assets/logout-svgrepo-com.svg';
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState('Home');
@@ -105,25 +106,27 @@ const Dashboard = () => {
       <NavBar />
       <div id='dashboardBody'>
         <div id='sideBar'>
-          <button onClick={() => setCurrentPage('Home')}>
+          <button onClick={() => setCurrentPage('Home')} title='Home'>
             <img src={homeIcon} width='16px'></img>
           </button>
-          <button onClick={() => setCurrentPage('EventGraph')}>
+          <button onClick={() => setCurrentPage('EventGraph')} title='Event Graph'>
             <img src={eventGraphIcon} width='16px'></img>
           </button>
-          <button onClick={() => setCurrentPage('TraceList')}>
+          <button onClick={() => setCurrentPage('TraceList')} title='Traces'>
             <img src={traceListIcon} width='16px'></img>
           </button>
-          <button onClick={() => setCurrentPage('Metrics')}>
+          <button onClick={() => setCurrentPage('Metrics')} title='Metrics'>
             <img src={metricsIcon} width='16px'></img>
           </button>
-          <button>
+          <button title='Team'>
             <img src={teamIcon} width='16px'></img>
           </button>
-          <button>
+          <button title='Settings'>
             <img src={settingsIcon} width='16px'></img>
           </button>
-          <button onClick={()=>logout()}>Logout</button>
+          <button onClick={()=>logout()} title='Logout'>
+            <img src={logoutIcon} width='16px'></img>
+          </button>
         </div>
         <div id='bodyContent'>
           <Body />

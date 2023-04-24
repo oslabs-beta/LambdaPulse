@@ -2,6 +2,7 @@ import DebugTraceDisplay from './DebugTraceDisplay'
 import spinner from '../assets/pulse-1.1s-200px.svg';
 import './HomeDisplay.css';
 import errorImage from '../assets/error-svgrepo-com.svg';
+import TraceFilters from './TraceFilters';
 
 
 const getFromRight = (s) => {
@@ -76,7 +77,10 @@ function TraceList (props) {
         <button onClick={() => refreshData()}>Refresh Data</button>
         {traces}
       </div>
-      <DebugTraceDisplay trace={props.traces[props.currentTrace]} />
+      <div style={{flexDirection: 'column', width: '100%'}}>
+        <TraceFilters handleRefreshData={refreshData} />
+        <DebugTraceDisplay trace={props.traces[props.currentTrace]} />
+      </div>
     </div>
   );
 }

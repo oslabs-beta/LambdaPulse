@@ -155,8 +155,6 @@ const DebugTraceDisplay = (props) => {
 
   return (
     <div className='debug-trace-display'>
-      <h3>Filters</h3>
-      <TraceFilters />
       <h3>Segment Detail:</h3>
       <DataTable
         columns={columns}
