@@ -5,7 +5,7 @@ const jwtController = {
     createJwt: (req,res,next) => {
         console.log("increate jwt")
         try {
-            const token = jwt.sign({email:res.locals.email}, process.env.JWT_KEY, {expiresIn:"1h"});
+            const token = jwt.sign({id:res.locals.userId}, process.env.JWT_KEY, {expiresIn:"1h"});
             res.cookie("token", token, {
                 httpOnly:true,
                 // secure: true,
@@ -28,6 +28,8 @@ const jwtController = {
         // console.log("this is req", req);
         try {
             const user = jwt.verify(token,process.env.JWT_KEY);
+            const userId = user.id;
+            res.locals.userId = userId;
             return next();
         } catch(err) {
             res.clearCookie("token");

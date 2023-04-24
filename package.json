@@ -30,7 +30,9 @@
     "jsonwebtoken": "^9.0.0",
     "nodemon": "^2.0.22",
     "npm": "^9.6.4",
+    "pg": "^8.10.0",
     "react-data-table-component": "^7.5.3",
+    "react-minimal-pie-chart": "^8.4.0",
     "redis": "^4.6.5",
     "uuid": "^9.0.0"
   }
