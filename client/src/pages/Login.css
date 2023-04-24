@@ -22,13 +22,13 @@ body {
   position: absolute;
   border-radius: 50%;
 }
-.shape:first-child {
+.shape:last-child {
   background: linear-gradient(#1845ad, #23a2f6);
   left: -80px;
   top: -80px;
 }
-.shape:last-child {
-  background: linear-gradient(to right, #ff512f, #f09819);
+.shape:first-child {
+  background: linear-gradient(to right, #fd3302, #f09819);
   right: -30px;
   bottom: -80px;
 }
@@ -92,10 +92,31 @@ input {
   color: #080710;
   margin-top: 30px;
   background-color: #ffffff;
+  background: linear-gradient(to bottom right, #fd3302, #ff9a5a);
+  transition: box-shadow 0.2s ease-in-out;
 }
-.signup-btn {
+
+.login-btn:not([disabled]):hover {
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+    -0.125rem -0.125rem 1rem rgba(239, 71, 101, 0.5),
+    0.125rem 0.125rem 1rem rgba(255, 154, 90, 0.5);
+}
+/* .signup-btn {
   color: #080710;
   background-color: #ffffff;
+  transition: box-shadow 0.2s ease-in-out;
+} */
+.btn-login {
+  color: #080710;
+  margin-top: 30px;
+  background-color: #f7f7f7; /* Adjust the color to make it white-ish */
+  transition: box-shadow 0.2s ease-in-out;
+}
+.btn-login:not([disabled]):hover {
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+    -0.125rem -0.125rem 1rem rgba(255, 180, 120, 0.5),
+    /* Adjust the color to make it lightly orange-ish */ 0.125rem 0.125rem 1rem
+      rgba(255, 180, 120, 0.5); /* Adjust the color to make it lightly orange-ish */
 }
 .already-have-account {
   margin-top: 10px;
