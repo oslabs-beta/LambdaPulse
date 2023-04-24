@@ -37,14 +37,6 @@ const Signup = () => {
           setErrorMessage('Email already exists');
         }
       })
-
-      // .then((response) => {
-      //   if (response.status === 201) {
-      //     navigate('/dashboard');
-      //   } else {
-      //     alert('Error registering the user');
-      //   }
-      // })
       .catch((error) => {
         console.log('Error:', error);
       });
