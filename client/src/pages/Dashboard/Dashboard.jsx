@@ -5,6 +5,7 @@ import HomeDisplay from '../../components/HomeDisplay';
 import TraceList from '../../components/TraceList';
 import Metrics from '../../components/Metrics';
 import { Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import LeftBar from '../../components/LeftBar';
 import sampleTraces from '../../assets/sampleTraces.json';
@@ -24,6 +25,9 @@ const Dashboard = () => {
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
+
   useEffect(() => {
     console.log('FIRED OFF USEFFECT');
     setLoading(true);
@@ -33,7 +37,12 @@ const Dashboard = () => {
         'Content-type': 'application/json',
       },
     })
-      .then((result) => result.json())
+      .then((result) => {
+        if (result.status === 419) {
+          navigate('/');
+        }
+        return result.json()
+      })
       .then((data) => {
         setLoading(false);
         if (data.length) {
@@ -51,6 +60,20 @@ const Dashboard = () => {
   useEffect(() => {
     setNodeData(traceList[currentTrace]);
   }, [currentTrace]);
+
+  function logout() {
+    fetch('/logout', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    })
+    .then((response) => {
+      if(response.status === 200) {
+        navigate('/');
+      }
+    })
+  }
 
   function Body() {
     return (
@@ -100,6 +123,7 @@ const Dashboard = () => {
           <button>
             <img src={settingsIcon} width='16px'></img>
           </button>
+          <button onClick={()=>logout()}>Logout</button>
         </div>
         <div id='bodyContent'>
           <Body />
