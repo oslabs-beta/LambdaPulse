@@ -11,6 +11,7 @@ export default defineConfig({
       '/blahblah': 'http://localhost:3000/',
       '/createUser': 'http://localhost:3000/',
       '/verifyUser': 'http://localhost:3000/',
+      '/logout': 'http://localhost:3000/'
     },
   },
   plugins: [react()],

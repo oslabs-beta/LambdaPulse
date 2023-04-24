@@ -2,6 +2,7 @@ import React from "react"
 import './nav-bar.css'
 import pulse from '../assets/pulse.svg'
 
+
 const NavBar = (props) => {
   return (
     <div className='NavBar'>
