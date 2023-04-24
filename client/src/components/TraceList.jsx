@@ -1,6 +1,6 @@
 import DebugTraceDisplay from './DebugTraceDisplay'
 import spinner from '../assets/pulse-1.1s-200px.svg';
-import './Homedisplay.css';
+import './HomeDisplay.css';
 import errorImage from '../assets/error-svgrepo-com.svg';
 
 
@@ -34,10 +34,13 @@ function TraceList (props) {
         const endpt = getFromRight(url)
         let errors = findErrorsInTrace(props.traces[n]);
         traces.push(<button key={'tb'+Math.random()} 
-                            onClick={() => props.setCurrentTrace(n)}>
-                            <span>{endpt + ' - ' + 
-                                props.traces[n].id
+                            onClick={() => props.setCurrentTrace(n)}
+                            style={{fontSize: 'small'}}>
+                            <span>{endpt + ' - '
                                 }
+                            </span>
+                            <span style={{fontSize: 'x-small'}}>
+                             {props.traces[n].id}
                             </span>
                             <span style={{marginLeft: '4px'}}>
                                 {
@@ -65,13 +68,14 @@ function TraceList (props) {
 
   return (
     <div className='trace-list-container'>
-      <p>TraceList</p>
-      {props.loading && (
-        <img className='loading-spinner' src={spinner} alt='Loading' />
-      )}
-      <button onClick={() => refreshData()}>Refresh Data</button>
-      {traces}
-
+      <div className='trace-list-traces'>
+        <p>TraceList</p>
+        {props.loading && (
+          <img className='loading-spinner' src={spinner} alt='Loading' />
+        )}
+        <button onClick={() => refreshData()}>Refresh Data</button>
+        {traces}
+      </div>
       <DebugTraceDisplay trace={props.traces[props.currentTrace]} />
     </div>
   );

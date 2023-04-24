@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently \"cd ./server && npm run server\" \"cd ./client && npm run dev\"",
     "server": "nodemon server/server.js",
-    "fulldev": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \"cd ./client && npx vite\""
+    "fulldev": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \"cd ./client && npx vite\"",
+    "fullprod": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \"cd ./client/dist && http-server\""
   },
   "keywords": [],
   "author": "",

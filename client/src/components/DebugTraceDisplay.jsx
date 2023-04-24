@@ -1,5 +1,6 @@
 import React from "react"
 import  DataTable, { createTheme } from 'react-data-table-component'
+import TraceFilters from './TraceFilters'
 
 const columns = [
   {
@@ -153,7 +154,9 @@ const flattenTrace = (trace) => {
 const DebugTraceDisplay = (props) => {
 
   return (
-    <div >
+    <div className='debug-trace-display'>
+      <h3>Filters</h3>
+      <TraceFilters />
       <h3>Segment Detail:</h3>
       <DataTable
         columns={columns}

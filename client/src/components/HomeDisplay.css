@@ -3,6 +3,19 @@
 }
 .trace-list-container {
   position: relative;
+  display: flex;
+}
+
+.trace-list-traces {
+  display: flex;
+  flex-direction: column;
+  width: 15%
+}
+
+.debug-trace-display {
+  position: relative;
+  overflow-inline: scroll;
+  max-width: 85%;
 }
 
 .loading-spinner {
