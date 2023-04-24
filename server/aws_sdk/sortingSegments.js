@@ -103,7 +103,7 @@ const parseData = (segmentArray) => {
 };
 
 const reuslt = parseData(realData);
-console.log(reuslt);
+// console.log(reuslt);
 
 function Node(segment) {
   this.id = segment.Document.id;

@@ -12,14 +12,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // const verifyLogin = (e) => {
-  //   fetch('/api')
-  //     .then((data) => data.json())
-  //     .then((res) => {
-  //       console.log(res);
-  //       navigate('/dashboard');
-  //     });
-  // };
   const verifyLogin = (e) => {
     const userData = {
       email,

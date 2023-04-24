@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { query } = require('../db.config.js');
+const jwt = require("jsonwebtoken");
 
 // Creation of user using PostgresSQL
 
@@ -65,4 +66,18 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-module.exports = { createUser, verifyUser };
+const logout = (req,res,next) => {
+  try {
+    res.clearCookie("token");
+    res.sendStatus(200);
+  } catch(err) {
+    console.log('Error', err);
+    let error = {
+      log: 'Express error handler caught userController.verifyUser',
+      message: { err: err },
+    };
+    return next(error);
+  }
+}
+
+module.exports = { createUser, verifyUser, logout };
