@@ -1,33 +1,14 @@
-// import AWS from 'aws-sdk';
 require('dotenv').config();
-// console.log(process.env.AWS_ACCESS_KEY_ID)
-// console.log(process.env.AWS_SECRET_ACCESS_KEY)
-// const AWS = require('aws-sdk');
+
 const { Pool } = require('pg');
 
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { DynamoDBDocument } = require('@aws-sdk/lib-dynamodb');
-const {
-  DescribeTableCommand,
-  CreateTableCommand,
-} = require('@aws-sdk/client-dynamodb');
-
 const { STSClient } = require('@aws-sdk/client-sts');
-
-// import { Module } from 'module';
-// const awsconfig = new AWS.Config({
-
-// AWS.config.update({
-//   region: 'us-east-1',
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-// });
 
 const PG_URI = process.env.PG_URI;
 
 // create a new pool here using the connection string above
 const pool = new Pool({
-  connectionString: PG_URI
+  connectionString: PG_URI,
 });
 
 const region = 'us-east-1';
@@ -36,111 +17,9 @@ const credentials = {
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 };
 
-// const db = new AWS.DynamoDB.DocumentClient();
-// const dynamodb = new AWS.DynamoDB();
-const dynamoDBClient = new DynamoDBClient({ region, credentials });
-const db = DynamoDBDocument.from(dynamoDBClient);
-
 const stsClient = new STSClient({ region, credentials });
 
-const Users = 'Users';
-const Logs = 'Logs';
-const describeTableParams = {
-  TableName: Users,
-};
-
-const createTableParams = {
-  TableName: Users,
-  AttributeDefinitions: [
-    {
-      AttributeName: 'email',
-      AttributeType: 'S',
-    },
-  ],
-  KeySchema: [
-    {
-      AttributeName: 'email',
-      KeyType: 'HASH',
-    },
-  ],
-  ProvisionedThroughput: {
-    ReadCapacityUnits: 5,
-    WriteCapacityUnits: 5,
-  },
-};
-
-const describeTableCommand = new DescribeTableCommand(describeTableParams);
-const createTableCommand = new CreateTableCommand(createTableParams);
-
-dynamoDBClient
-  .send(describeTableCommand)
-  .then((data) => {
-    console.log('Existing table:', data);
-  })
-  .catch((err) => {
-    if (err.name === 'ResourceNotFoundException') {
-      console.log('Table not found, creating a new table');
-      dynamoDBClient
-        .send(createTableCommand)
-        .then((data) => {
-          console.log('Creating Table:', Users);
-          console.log(data);
-        })
-        .catch((err) => {
-          console.log('Error:', err);
-        });
-    } else {
-      console.log('Error:', err);
-    }
-  });
-//create logs table
-// const describeTableParamsLogs = {
-//     TableName: Logs
-// }
-// const createTableParamsLogs = {
-//     TableName: Logs,
-//     AttributeDefinitions :[
-//         {
-//             AttributeName: "log_id",
-//             AttributeType: "N"
-//         }
-//     ],
-//     KeySchema:[
-//         {
-//             AttributeName: 'log_id',
-//             KeyType: 'HASH'
-//         }
-//     ],
-//     ProvisionedThroughput: {
-//         ReadCapacityUnits: 15,
-//         WriteCapacityUnits: 15
-//     }
-// }
-// dynamodb.describeTable(describeTableParamsLogs, function(err,data) {
-//     if(err) {
-//         console.log(err);
-//         dynamodb.createTable(createTableParamsLogs, function(err,data) {
-//             if(err) {
-//                 console.log(err)
-//             } else {
-//                 console.log('Creating Table: ', Users );
-//                 console.log(data);
-//             }
-//         });
-//     } else {
-//         console.log('existing table')
-//         console.log(data);
-//     }
-// });
-
-
-// We export an object that contains a property called query,
-// which is a function that returns the invocation of pool.query() after logging the query
-// This will be required in the controllers to be the access point to the database
 module.exports = {
-  db,
-  Users,
-  Logs,
   stsClient,
   query: (text, params, callback) => {
     console.log('executed query', text);

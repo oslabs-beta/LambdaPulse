@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { query } = require('../db.config.js');
 
 const {
   XRayClient,
@@ -19,6 +20,7 @@ redisClient.on('error', (err) => {
 });
 
 const main = require('./sortingSegments');
+// const { query } = require('express');
 //redis client to add traces to redis
 
 // const awsCredentials = {
@@ -77,6 +79,7 @@ const getTraceMiddleware = {
       const params = {
         StartTime: startTime,
         EndTime: endTime,
+        TimeRangeType: 'TraceId',
       };
 
       const response = await xClient.send(new GetTraceSummariesCommand(params));
@@ -139,13 +142,13 @@ const getTraceMiddleware = {
       res.locals.traceSegmentData = fullTraceArray;
       next();
     } catch (err) {
-      next({log :err});
+      next({ log: err });
     }
   },
 
   sortSegments: async (req, res, next) => {
     if (res.locals.redisTraces != undefined) {
-      res.locals.nodes = res.locals.redisTraces;
+      res.locals.userTraces = res.locals.redisTraces;
       return next();
     }
     console.log('in sortedSegments');
@@ -222,7 +225,8 @@ const getTraceMiddleware = {
         }
       }
       res.locals.nodes = allNodes;
-
+      const userId = 7;
+      console.log('this is nodes', allNodes);
       try {
         console.log('HOOBLA');
         redisClient.set('Traces', JSON.stringify(allNodes));
@@ -230,6 +234,48 @@ const getTraceMiddleware = {
       } catch (err) {
         next(err);
       }
+      // inserting new traces into traces table
+      try {
+        const insertTraceQuery =
+          'INSERT INTO traces (_id, user_id, root_node) VALUES ($1,$2,$3) ON CONFLICT (_id) DO NOTHING RETURNING * ;';
+        for (let i = 0; i < allNodes.length; i++) {
+          const rootNode = allNodes[i];
+          const traceId = rootNode.id;
+          console.log(rootNode.fullData.Document.start_time);
+          const result = await query(insertTraceQuery, [
+            traceId,
+            userId,
+            JSON.stringify(rootNode),
+          ]);
+          if (result.rowCount > 0) {
+            console.log('Inserted trace in DB', result.rows[0]);
+          } else {
+            console.log(`Trace with id ${traceId} already exists in DB`);
+          }
+        }
+        // Deleting traces older than 7 days long
+        const deleteOldTracesQuery = `DELETE FROM traces WHERE user_id = $1 AND ((root_node -> 'fullData' ->
+        'Document' ->> 'start_time')::double precision < EXTRACT(EPOCH FROM (NOW() - INTERVAL '7 days')));`;
+        await query(deleteOldTracesQuery, [userId]);
+      } catch (err) {
+        console.log('error', err);
+        next(err);
+      }
+
+      // Selecting traces, sorting them in descending order and passing on to res.locals
+      try {
+        const selectTracesQuery = `SELECT root_node FROM traces WHERE user_id = $1 ORDER BY (root_node -> 'fullData' -> 
+        'Document' ->> 'start_time')::double precision DESC;`;
+        const tracesResult = await query(selectTracesQuery, [userId]);
+
+        const userTraces = tracesResult.rows.map((row) => row.root_node);
+        console.log('this is userTraces', userTraces);
+        res.locals.userTraces = userTraces;
+      } catch (err) {
+        console.log('error', err);
+        next(err);
+      }
+
       next();
     } catch (err) {
       next(err);

@@ -50,8 +50,8 @@ app.get(
   getTraceMiddleware.getSegmentArray,
   getTraceMiddleware.sortSegments,
   (req, res) => {
-    console.log('Sending this back to the frontend:', res.locals.nodes);
-    res.status(200).json(res.locals.nodes);
+    console.log('Sending this back to the frontend:', res.locals.userTraces);
+    res.status(200).json(res.locals.userTraces);
   }
 );
 
