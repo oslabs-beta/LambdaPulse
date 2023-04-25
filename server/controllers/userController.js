@@ -5,9 +5,8 @@ const jwt = require('jsonwebtoken');
 // Creation of user using PostgresSQL
 
 const createUser = async (req, res, next) => {
-  const { full_name, email, password } = req.body;
+  const { fullName, email, password } = req.body;
   console.log('in create user');
-  console.log(full_name, email, password);
   try {
     const getResult = await query('SELECT * FROM users WHERE email = $1', [
       email,
@@ -20,9 +19,10 @@ const createUser = async (req, res, next) => {
 
     const result = await query(
       'INSERT INTO users (full_name, email, password) VALUES ($1, $2, $3) RETURNING _id',
-      [full_name, email, hashedPassword]
+      [fullName, email, hashedPassword]
     );
-    const userId = result.rows[0].id;
+    console.log('result.rows[0].id', result.rows[0]._id);
+    const userId = result.rows[0]._id;
 
     console.log('user created successfully');
     res.locals.userId = userId;
