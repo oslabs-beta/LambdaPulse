@@ -1,11 +1,12 @@
 const bcrypt = require('bcrypt');
 const { query } = require('../db.config.js');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 // Creation of user using PostgresSQL
 
 const createUser = async (req, res, next) => {
   const { full_name, email, password } = req.body;
+  console.log('in create user');
   console.log(full_name, email, password);
   try {
     const getResult = await query('SELECT * FROM users WHERE email = $1', [
@@ -17,13 +18,14 @@ const createUser = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    await query(
-      'INSERT INTO users (full_name, email, password) VALUES ($1,$2,$3)',
+    const result = await query(
+      'INSERT INTO users (full_name, email, password) VALUES ($1, $2, $3) RETURNING _id',
       [full_name, email, hashedPassword]
     );
+    const userId = result.rows[0].id;
 
     console.log('user created successfully');
-    res.locals.userId = userData._id;
+    res.locals.userId = userId;
 
     return next();
   } catch (err) {
@@ -66,11 +68,11 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-const logout = (req,res,next) => {
+const logout = (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie('token');
     res.sendStatus(200);
-  } catch(err) {
+  } catch (err) {
     console.log('Error', err);
     let error = {
       log: 'Express error handler caught userController.verifyUser',
@@ -78,6 +80,6 @@ const logout = (req,res,next) => {
     };
     return next(error);
   }
-}
+};
 
 module.exports = { createUser, verifyUser, logout };
