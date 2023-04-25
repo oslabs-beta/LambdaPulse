@@ -21,7 +21,7 @@ const Signup = () => {
     const userData = {
       email,
       password,
-      full_name: fullName,
+      fullName,
     };
     console.log(userData);
     fetch('/createUser', {
