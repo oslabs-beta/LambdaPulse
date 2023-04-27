@@ -1,59 +1,32 @@
 const bcrypt = require('bcrypt');
-const { db, Users } = require('../db.config.js');
-const jwt = require("jsonwebtoken");
+const { query } = require('../db.config.js');
+const jwt = require('jsonwebtoken');
+
+// Creation of user using PostgresSQL
 
 const createUser = async (req, res, next) => {
-  const TableName = Users;
   const { fullName, email, password } = req.body;
-  console.log(fullName, email, password);
-
+  console.log('in create user');
   try {
-    // Check if email already exists
-    const getResult = await db.get({
-      TableName: TableName,
-      Key: {
-        email,
-      },
-    });
-    // no need to use promises for SDK v3
-    //   .promise();
-    // const getResult = await new Promise((resolve, reject) => {
-    //   db.get(
-    //     {
-    //       TableName: TableName,
-    //       Key: {
-    //         email,
-    //       },
-    //     },
-    //     (err, data) => {
-    //       if (err) reject(err);
-    //       else resolve(data);
-    //     }
-    //   );
-    // });
-
-    if (getResult.Item) {
+    const getResult = await query('SELECT * FROM users WHERE email = $1', [
+      email,
+    ]);
+    if (getResult.rows.length > 0) {
       return res.sendStatus(409);
     }
-
-    // If email does not exist, create new user
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const Item = {
-      fullName,
-      email,
-      password: hashedPassword,
-    };
+    const result = await query(
+      'INSERT INTO users (full_name, email, password) VALUES ($1, $2, $3) RETURNING _id',
+      [fullName, email, hashedPassword]
+    );
+    console.log('result.rows[0].id', result.rows[0]._id);
+    const userId = result.rows[0]._id;
 
-    await db.put({
-      TableName: TableName,
-      Item: Item,
-    });
-    //   .promise();
+    console.log('user created successfully');
+    res.locals.userId = userId;
 
-    console.log('User created successfully');
-    res.locals.email = email;
     return next();
   } catch (err) {
     console.log('Error', err);
@@ -66,26 +39,24 @@ const createUser = async (req, res, next) => {
 };
 
 const verifyUser = async (req, res, next) => {
-  const TableName = Users;
   const { email, password } = req.body;
-  const Key = { email };
-  console.log(email, password, TableName);
 
   try {
-    const { Item: userData } = await db.get({ TableName, Key });
+    const { rows } = await query('SELECT * FROM users WHERE email = $1', [
+      email,
+    ]);
 
-    if (!userData) {
+    if (rows.length === 0) {
       return res.sendStatus(401);
     }
-
+    const userData = rows[0];
+    console.log('user id is :', userData._id);
+    console.log('userdata', userData);
     const isMatch = await bcrypt.compare(password, userData.password);
-    console.log('matched?', isMatch);
-
-
     if (!isMatch) {
       return res.sendStatus(401);
     }
-    res.locals.email = userData.email;
+    res.locals.userId = userData._id;
     return next();
   } catch (err) {
     console.log('Error', err);
@@ -97,11 +68,11 @@ const verifyUser = async (req, res, next) => {
   }
 };
 
-const logout = (req,res,next) => {
+const logout = (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie('token');
     res.sendStatus(200);
-  } catch(err) {
+  } catch (err) {
     console.log('Error', err);
     let error = {
       log: 'Express error handler caught userController.verifyUser',
@@ -109,6 +80,6 @@ const logout = (req,res,next) => {
     };
     return next(error);
   }
-}
+};
 
 module.exports = { createUser, verifyUser, logout };
