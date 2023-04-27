@@ -31,7 +31,7 @@ const Signup = () => {
     })
       .then((response) => {
         console.log(response);
-        if (response.status === 200) {
+        if (response.status === 201) {
           navigate('/dashboard');
         } else if (response.status === 409) {
           setErrorMessage('Email already exists');
