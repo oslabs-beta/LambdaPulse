@@ -41,7 +41,7 @@ app.post('/verifyUser', userController.verifyUser, jwtController.createJwt, (req
   res.sendStatus(200);
 });
 
-app.get('/logout', userController.logout);
+app.get('/logout',redisController.clearTraces, userController.logout);
 
 app.post('/setLogs', redisController.setLogs, (req, res) => {
   //successful login

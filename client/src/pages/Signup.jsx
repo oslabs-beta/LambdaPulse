@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
+import Reaptcha from "reaptcha";
 import './Login.css';
+
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +11,7 @@ const Signup = () => {
   const [fullName, setFulltName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [captcha, setCaptcha] = useState('')
 
   const navigate = useNavigate();
 
@@ -17,11 +20,15 @@ const Signup = () => {
       setErrorMessage('Passwords do not match');
       return;
     }
+    if (captcha !== "passed") {
+      setErrorMessage('Captcha required')
+      return;
+    }
 
     const userData = {
       email,
       password,
-      full_name: fullName,
+      fullName,
     };
     console.log(userData);
     fetch('/createUser', {
@@ -89,6 +96,13 @@ const Signup = () => {
           required
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+        <div>
+        <Reaptcha
+          sitekey={captchaKey}
+          onVerify={()=>setCaptcha("passed")}
+          required
+        />
+        </div>
         <button className='login-btn' type='submit'>
           Sign Up
         </button>
