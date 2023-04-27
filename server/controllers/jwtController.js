@@ -23,6 +23,8 @@ const jwtController = {
         }
     },
     verifyJwt: (req,res,next) => {
+        console.log('in verifyjwt')
+        console.log('this is req.cookies',req.cookies);
         const token = req.cookies.token;
         console.log(token);
         // console.log("this is req", req);

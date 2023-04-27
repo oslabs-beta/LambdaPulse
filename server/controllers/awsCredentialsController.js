@@ -1,5 +1,6 @@
 const { AssumeRoleCommand } = require('@aws-sdk/client-sts');
 const { stsClient } = require('../db.config.js');
+const { query } = require('../db.config.js');
 
 const awsCredentialsController = {};
 
@@ -9,7 +10,14 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
     return next();
   } 
   console.log('Received creds request at ' + Date.now());
-  const userRoleArn = process.env.USER_ROLE_ARN;
+  //use this: res.locals.userId to find user's ARN
+  //SELECT user.role_ARN where user.id = res.locals.userID
+  const roleResult = await query('SELECT role_arn FROM users WHERE _id = $1 ;', [res.locals.userId])
+  console.log('this is roleResult in AWS credentials', roleResult)
+  const getRole = roleResult.rows.map(row => row.role_arn)[0]
+  console.log('this is getRole in AWS credentials', getRole)
+
+  const userRoleArn = getRole;
   console.log('req body: ', req.body);
 
   if (!userRoleArn) {
@@ -18,7 +26,7 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
 
   const assumeRoleParams = {
     RoleArn: userRoleArn,
-    RoleSessionName: 'TestSession',
+    RoleSessionName: 'lambdaPulseSession',
   };
 
   try {

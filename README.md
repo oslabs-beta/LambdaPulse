@@ -10,6 +10,8 @@ DEV INSTALLATION INSTRUCTIONS:
     AWS_SECRET_ACCESS_KEY
     USER_ROLE_ARN
     JWT_KEY
+
+    -also a separate .env in client folder, setup VITE_CAPTCHA_KEY = "google captchav2 key"
 5) install redis-server via apt/brew/etc
 6) npm run fulldev
 
