@@ -4,8 +4,22 @@ const Settings = () => {
     const [arn, setArn] = useState('');
     
     const addArn = (e) => {
-        
-        return;
+      console.log('adding arn')
+      let userData = {userARN:arn};
+        fetch('/setUserARN', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        })
+        .then((result) => {
+          // setArn(result);
+          console.log(result);
+          return result;
+        })
+        .catch((err) => console.log(err));
+        console.log('finished adding arn')
     }
     return (
         <div>
