@@ -12,11 +12,6 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [captcha, setCaptcha] = useState('')
-  // const [loading, setLoading] = useState(false);
-  // {loading && (
-  //   <img className='loading-spinner' src={spinner} alt='Loading' />
-  // )}
-  // setLoading(true);
 
   const navigate = useNavigate();
 
