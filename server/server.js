@@ -50,6 +50,11 @@ app.get('/logout',redisController.clearTraces, userController.logout);
 //   // res.redirect('homepage');
 //   res.sendStatus(200);
 // });
+app.get('/getCurrentArn', jwtController.verifyJwt, async(req,res) => {
+  const currentArn = await query('SELECT role_arn FROM users WHERE _id = $1 ; ', [res.locals.userId]);
+  res.status(200).send(currentArn);
+})
+
 app.post('/setUserARN', jwtController.verifyJwt, async (req,res)  => {
   console.log('in Set User ARN')
   const { userARN } = req.body;
@@ -61,7 +66,7 @@ app.post('/setUserARN', jwtController.verifyJwt, async (req,res)  => {
   } catch(err) {
     console.log('Error setting roleARN', err)
   }
-  res.status(200).send(userARN);
+  res.status(200).send({success:'User ARN successfully added!'});
 })
 
 app.get(

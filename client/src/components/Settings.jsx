@@ -2,7 +2,28 @@ import { useEffect, useState } from 'react';
 
 const Settings = () => {
     const [arn, setArn] = useState('');
+    const [currentArn, setCurrentArn] = useState('');
+    const [success, setSuccess] = useState('');
     
+    useEffect(() => {
+      console.log('in useffect')
+      fetch('/getCurrentArn', {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json',
+        },
+      })
+      .then(result=> result.json())
+      .then(data => {
+        console.log(data.rows[0].role_arn);
+        if (data.rows[0].role_arn !== null) {
+          setCurrentArn(data.rows[0].role_arn);
+        }
+      })
+        // console.log(result);
+        // setCurrentArn(result);
+    },[]);
+
     const addArn = (e) => {
       console.log('adding arn')
       let userData = {userARN:arn};
@@ -14,9 +35,8 @@ const Settings = () => {
           body: JSON.stringify(userData),
         })
         .then((result) => {
-          // setArn(result);
-          console.log(result);
-          return result;
+          console.log('this is result',result);
+          setSuccess('User ARN successfully updated!');
         })
         .catch((err) => console.log(err));
         console.log('finished adding arn')
@@ -24,9 +44,10 @@ const Settings = () => {
     return (
         <div>
             <h2>Settings</h2>
-            <p>Current Arn: {arn}</p>
+            <p>Current Arn: {currentArn}</p>
             <p>Click <a href='https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?stackName=lambdaPulseDelegationRoleStack&param_ExternalId&templateURL=https://lambdapulse.s3.amazonaws.com/cloudFormation.yaml'>
                 here</a>, create your stack, navigate to the outputs tab, and paste your ARN key into the field below!</p>
+            <p style={{color:'red'}}>{success}</p>
             <form
               id='arn-form'
               onSubmit={(e) => {
