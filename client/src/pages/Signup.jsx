@@ -43,22 +43,12 @@ const Signup = () => {
     })
       .then((response) => {
         console.log(response);
-        if (response.ok ) {
+        if (response.status === 201) {
           navigate('/dashboard');
         } else if (response.status === 409) {
           setErrorMessage('Email already exists');
-
-          // alert('Error registering the user');
         }
       })
-
-      // .then((response) => {
-      //   if (response.status === 201) {
-      //     navigate('/dashboard');
-      //   } else {
-      //     alert('Error registering the user');
-      //   }
-      // })
       .catch((error) => {
         console.log('Error:', error);
       });
