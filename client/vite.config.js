@@ -15,6 +15,7 @@ export default defineConfig({
       '/verifyUser': 'http://localhost:3000/',
       '/logout': 'http://localhost:3000/',
       '/setUserARN': 'http://localhost:3000/',
+      '/getCurrentArn': 'http://localhost:3000/'
     },
   },
   plugins: [react()],
