@@ -8,6 +8,8 @@ const awsCredentialsController = require('./controllers/awsCredentialsController
 const getTraceMiddleware = require('./aws_sdk/traceDetails');
 const jwtController = require('./controllers/jwtController');
 const cookieParser = require('cookie-parser');
+const { query } = require('./db.config.js');
+
 
 app.use(cors());
 app.use(express.json());
@@ -41,13 +43,31 @@ app.post('/verifyUser', userController.verifyUser, jwtController.createJwt, (req
   res.sendStatus(200);
 });
 
-app.get('/logout', userController.logout);
+app.get('/logout',redisController.clearTraces, userController.logout);
 
-app.post('/setLogs', redisController.setLogs, (req, res) => {
-  //successful login
-  // res.redirect('homepage');
-  res.sendStatus(200);
-});
+// app.post('/setLogs', redisController.setLogs, (req, res) => {
+//   //successful login
+//   // res.redirect('homepage');
+//   res.sendStatus(200);
+// });
+app.get('/getCurrentArn', jwtController.verifyJwt, async(req,res) => {
+  const currentArn = await query('SELECT role_arn FROM users WHERE _id = $1 ; ', [res.locals.userId]);
+  res.status(200).send(currentArn);
+})
+
+app.post('/setUserARN', jwtController.verifyJwt, async (req,res)  => {
+  console.log('in Set User ARN')
+  const { userARN } = req.body;
+  const userId = res.locals.userId;
+  console.log(userId)
+  try {
+    await query('UPDATE users SET role_arn = $1 WHERE _id = $2 ;', [userARN,userId])
+
+  } catch(err) {
+    console.log('Error setting roleARN', err)
+  }
+  res.status(200).send({success:'User ARN successfully added!'});
+})
 
 app.get(
   '/getTraces',

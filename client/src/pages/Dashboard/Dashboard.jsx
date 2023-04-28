@@ -4,6 +4,7 @@ import EventGraph from '../../components/EventGraph';
 import HomeDisplay from '../../components/HomeDisplay';
 import TraceList from '../../components/TraceList';
 import Metrics from '../../components/Metrics';
+import Settings from '../../components/Settings';
 import { Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
@@ -97,6 +98,9 @@ const Dashboard = () => {
             currentTrace={currentTrace}
           />
         )}
+        {currentPage === 'Settings' && (
+          <Settings/>
+        )}
       </div>
     );
   }
@@ -120,7 +124,7 @@ const Dashboard = () => {
           <button>
             <img src={teamIcon} width='16px'></img>
           </button>
-          <button>
+          <button onClick={() => setCurrentPage('Settings')}>
             <img src={settingsIcon} width='16px'></img>
           </button>
           <button onClick={()=>logout()}>Logout</button>
