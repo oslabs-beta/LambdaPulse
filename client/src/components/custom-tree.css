@@ -1,0 +1,57 @@
+/* custom-tree.css */
+
+svg g .rd3t-link {
+  stroke: #999;
+}
+
+.link__to-branch {
+  stroke-width: 1;
+  stroke: #f0f;
+  border-color: #dddddd;
+  color: #dddddd;
+}
+
+.link__to-leaf {
+  stroke-width: 1;
+  stroke: #f0f;
+  border-color: #dddddd;
+  color: #dddddd;
+}
+
+.node__detail {
+  min-width: 200px;
+  max-width: 300px;
+  min-height: 200px;
+  max-height: 400px;
+  color: #dddddd;
+  background-color: #191919;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: #777777;
+  top: 40px;
+  left: 40px;
+  position: absolute;
+  display: inline;
+  font-size: small;
+}
+
+.log__list {
+  background-color: #333333;
+  margin: 20px;
+}
+
+.nd__attribute {
+
+}
+
+.nd__subsegment__container {
+  font-size: x-small;
+  background-color: #242424;
+  padding: 2px;
+  margin: 2px;
+}
+
+.nd__subsegment {
+
+}

@@ -1,0 +1,196 @@
+{
+    "id": "66083ccfc311f302",
+    "name": "dev-todo-list-app/dev",
+    "subsegments": [
+      {
+        "id": "4c17ecc1b6cd296a",
+        "name": "Lambda",
+        "start_time": 1681574429.581,
+        "end_time": 1681574431.023,
+        "http": {
+          "request": {
+            "url": "https://lambda.us-east-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:us-east-1:263792328682:function:todo-list-app-dev-postTask/invocations",
+            "method": "POST"
+          },
+          "response": {
+            "status": 201,
+            "content_length": 2
+          }
+        },
+        "aws": {
+          "function_name": "todo-list-app-dev-postTask",
+          "region": "us-east-1",
+          "operation": "Invoke",
+          "resource_names": [
+            "todo-list-app-dev-postTask"
+          ]
+        },
+        "namespace": "aws"
+      }
+    ],
+    "children": [
+      {
+        "id": "5f8d1a23aa89bd66",
+        "name": "todo-list-app-dev-postTask",
+        "parent_id": "4c17ecc1b6cd296a",
+        "children": [
+          {
+            "id": "03e476fc59b9eecd",
+            "name": "todo-list-app-dev-postTask",
+            "parent_id": "5f8d1a23aa89bd66",
+            "subsegments": [
+              {
+                "id": "8a2b10d894511fc9",
+                "name": "Initialization",
+                "start_time": 1681574429.970087,
+                "end_time": 1681574430.8215926,
+                "aws": {
+                  "function_arn": "arn:aws:lambda:us-east-1:263792328682:function:todo-list-app-dev-postTask"
+                }
+              },
+              {
+                "id": "9a00f74249b3df61",
+                "name": "Invocation",
+                "start_time": 1681574430.8230484,
+                "end_time": 1681574431.0199275,
+                "aws": {
+                  "function_arn": "arn:aws:lambda:us-east-1:263792328682:function:todo-list-app-dev-postTask"
+                },
+                "subsegments": [
+                  {
+                    "id": "72196dbd1971fbad",
+                    "name": "Lambda",
+                    "start_time": 1681574430.93,
+                    "end_time": 1681574431.015,
+                    "http": {
+                      "response": {
+                        "status": 200
+                      }
+                    },
+                    "aws": {
+                      "retries": 0,
+                      "status_code": 200,
+                      "function_name": "todo-list-app-dev-sendNotification",
+                      "region": "us-east-1",
+                      "operation": "Invoke",
+                      "request_id": "1a61d1e3-4df6-4c2e-9beb-e150bc55ff34",
+                      "resource_names": [
+                        "todo-list-app-dev-sendNotification"
+                      ]
+                    },
+                    "namespace": "aws"
+                  },
+                  {
+                    "id": "b65ecbebf0c80be7",
+                    "name": "DynamoDB",
+                    "start_time": 1681574430.842,
+                    "end_time": 1681574430.924,
+                    "http": {
+                      "response": {
+                        "status": 200
+                      }
+                    },
+                    "aws": {
+                      "retries": 0,
+                      "region": "us-east-1",
+                      "operation": "PutItem",
+                      "request_id": "ONUHTPGP3PBVIN2UJI284UBUA7VV4KQNSO5AEMVJF66Q9ASUAAJG",
+                      "table_name": "todo-list-tasks",
+                      "resource_names": [
+                        "todo-list-tasks"
+                      ]
+                    },
+                    "namespace": "aws"
+                  }
+                ]
+              },
+              {
+                "id": "03cea9c3be41a0ba",
+                "name": "Overhead",
+                "start_time": 1681574431.0199893,
+                "end_time": 1681574431.0205321,
+                "aws": {
+                  "function_arn": "arn:aws:lambda:us-east-1:263792328682:function:todo-list-app-dev-postTask"
+                }
+              }
+            ],
+            "children": [
+              {
+                "id": "3a049070bf15849c",
+                "name": "todo-list-app-dev-sendNotification",
+                "parent_id": "72196dbd1971fbad",
+                "children": [
+                  {
+                    "id": "4dd5002f3760b1c7",
+                    "name": "todo-list-app-dev-sendNotification",
+                    "parent_id": "3a049070bf15849c",
+                    "subsegments": [
+                      {
+                        "id": "a53cba167510c8be",
+                        "name": "Invocation",
+                        "start_time": 1681574430.9920678,
+                        "end_time": 1681574430.9951615,
+                        "aws": {
+                          "function_arn": "arn:aws:lambda:us-east-1:263792328682:function:todo-list-app-dev-sendNotification"
+                        }
+                      },
+                      {
+                        "id": "6318618ac9af4267",
+                        "name": "Overhead",
+                        "start_time": 1681574430.9951978,
+                        "end_time": 1681574431.0279648,
+                        "aws": {
+                          "function_arn": "arn:aws:lambda:us-east-1:263792328682:function:todo-list-app-dev-sendNotification"
+                        }
+                      }
+                    ],
+                    "children": [],
+                    "origin": "AWS::Lambda::Function"
+                  }
+                ],
+                "origin": "AWS::Lambda",
+                "http": {
+                  "response": {
+                    "status": 200
+                  }
+                }
+              },
+              {
+                "id": "3dd87a2724860b51",
+                "name": "DynamoDB",
+                "parent_id": "b65ecbebf0c80be7",
+                "children": [],
+                "origin": "AWS::DynamoDB::Table",
+                "http": {
+                  "response": {
+                    "status": 200
+                  }
+                }
+              }
+            ],
+            "origin": "AWS::Lambda::Function"
+          }
+        ],
+        "origin": "AWS::Lambda",
+        "http": {
+          "response": {
+            "status": 200
+          }
+        }
+      }
+    ],
+    "origin": "AWS::ApiGateway::Stage",
+    "http": {
+      "request": {
+        "url": "https://cm8rpw34l8.execute-api.us-east-1.amazonaws.com/dev/add-task",
+        "method": "POST",
+        "user_agent": "PostmanRuntime/7.31.3",
+        "client_ip": "172.58.229.173",
+        "x_forwarded_for": true
+      },
+      "response": {
+        "status": 201,
+        "content_length": 0
+      }
+    }
+  }

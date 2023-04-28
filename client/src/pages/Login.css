@@ -1,0 +1,138 @@
+*,
+*:before,
+*:after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: #080710;
+}
+.background {
+  width: 430px;
+  height: 520px;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+}
+.background .shape {
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  border-radius: 50%;
+}
+.shape:last-child {
+  background: linear-gradient(#1845ad, #23a2f6);
+  left: -80px;
+  top: -80px;
+}
+.shape:first-child {
+  background: linear-gradient(to right, #fd3302, #f09819);
+  right: -30px;
+  bottom: -80px;
+}
+.auth-form {
+  width: 400px;
+  background-color: rgba(255, 255, 255, 0.13);
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  left: 50%;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+  padding: 50px 35px;
+}
+
+.auth-form * {
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  outline: none;
+  border: none;
+}
+.auth-form h3 {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 42px;
+  text-align: center;
+  margin-top: 0px;
+}
+.login-form {
+  height: 450px;
+}
+
+.signup-form {
+  height: 620px;
+  margin-top: 50px;
+}
+label {
+  text-align: left;
+  display: block;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 500;
+}
+input {
+  display: block;
+  height: 40px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 3px;
+  padding: 0 10px;
+  margin-top: 3px;
+  font-size: 14px;
+  font-weight: 300;
+}
+::placeholder {
+  color: #e5e5e5;
+}
+.login-btn {
+  color: #080710;
+  margin-top: 30px;
+  background-color: #ffffff;
+  background: linear-gradient(to bottom right, #fd3302, #ff9a5a);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.login-btn:not([disabled]):hover {
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+    -0.125rem -0.125rem 1rem rgba(239, 71, 101, 0.5),
+    0.125rem 0.125rem 1rem rgba(255, 154, 90, 0.5);
+}
+/* .signup-btn {
+  color: #080710;
+  background-color: #ffffff;
+  transition: box-shadow 0.2s ease-in-out;
+} */
+.btn-login {
+  color: #080710;
+  margin-top: 30px;
+  background-color: #f7f7f7; /* Adjust the color to make it white-ish */
+  transition: box-shadow 0.2s ease-in-out;
+}
+.btn-login:not([disabled]):hover {
+  box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+    -0.125rem -0.125rem 1rem rgba(255, 180, 120, 0.5),
+    /* Adjust the color to make it lightly orange-ish */ 0.125rem 0.125rem 1rem
+      rgba(255, 180, 120, 0.5); /* Adjust the color to make it lightly orange-ish */
+}
+.already-have-account {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+button {
+  width: 100%;
+  background-color: #ffffff;
+  color: #080710;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: #f09819;
+}
