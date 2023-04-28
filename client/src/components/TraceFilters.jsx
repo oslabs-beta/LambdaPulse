@@ -6,8 +6,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import refreshIcon from '../assets/refresh-svgrepo-com.svg'
 
 const TraceFilters = (props) => {
-  const [start_value, onChangeStart] = useState(new Date());
-  const [end_value, onChangeEnd] = useState(new Date());
+
 
   return (
     <div style={{width: '100%', verticalAlign: 'baseline'}}>
@@ -18,8 +17,8 @@ const TraceFilters = (props) => {
         <DatePicker
                       className='datepicker__override'
                       popperClassName='datepicker__popper__override'
-                      selected={start_value}
-                      onChange={onChangeStart}
+                      selected={props.start_value}
+                      onChange={props.onChangeStart}
                       showTimeSelect
                       timeFormat="HH:mm"
                       timeIntervals={1}
@@ -32,8 +31,8 @@ const TraceFilters = (props) => {
         <DatePicker
                       className='datepicker__override'
                       popperClassName='datepicker__popper__override'
-                      selected={end_value}
-                      onChange={onChangeEnd}
+                      selected={props.end_value}
+                      onChange={props.onChangeEnd}
                       showTimeSelect
                       timeFormat="HH:mm"
                       timeIntervals={1}
