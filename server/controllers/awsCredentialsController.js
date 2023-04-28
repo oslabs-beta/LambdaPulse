@@ -14,7 +14,7 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
   //SELECT user.role_ARN where user.id = res.locals.userID
   const roleResult = await query('SELECT role_arn FROM users WHERE _id = $1 ;', [res.locals.userId])
   console.log('this is roleResult in AWS credentials', roleResult)
-  const getRole = roleResult.rows.map(row => row.role_arn)[0]
+  const getRole = roleResult.rows[0].role_arn
   console.log('this is getRole in AWS credentials', getRole)
 
   const userRoleArn = getRole;
