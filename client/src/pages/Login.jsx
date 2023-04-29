@@ -53,7 +53,7 @@ const Login = () => {
 
         <label htmlFor='email'>Email</label>
         <input
-          type='text'
+          type='email'
           id='email'
           required
           onChange={(e) => setEmail(e.target.value)}
