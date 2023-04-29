@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NodeTree from './NodeTree';
 import NodeDetail from './NodeDetail';
 import LogPanel from './LogPanel';

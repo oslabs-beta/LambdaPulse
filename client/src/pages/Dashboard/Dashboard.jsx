@@ -164,8 +164,6 @@ const Dashboard = () => {
             refresh={refresh}
             loading={loading}
             currentTrace={currentTrace}
-            appTreeChildren = {appTreeChildren}
-            setAppTreeChildren = {setAppTreeChildren}
           />
         )}
         {currentPage === 'Settings' && (
