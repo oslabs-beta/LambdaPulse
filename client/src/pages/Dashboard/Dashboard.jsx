@@ -17,6 +17,7 @@ import traceListIcon from '../../assets/list-svgrepo-com.svg';
 import metricsIcon from '../../assets/chart-bar-svgrepo-com.svg';
 import teamIcon from '../../assets/team-svgrepo-com.svg';
 import settingsIcon from '../../assets/settings-svgrepo-com.svg';
+import mapIcon from '../../assets/map-svgrepo-com.svg'
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState('Home');
@@ -25,6 +26,8 @@ const Dashboard = () => {
   const [nodeData, setNodeData] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [appTreeNode, setAppTreeNode] = useState({});
+  const [appLogs, setAppLogs] = useState([]);
 
   const navigate = useNavigate();
 
@@ -62,6 +65,65 @@ const Dashboard = () => {
     setNodeData(traceList[currentTrace]);
   }, [currentTrace]);
 
+  useEffect(() => {
+    //get from right
+    const getFromRight = (s) => {
+      let result = '';
+      for (let i = s.length-1; i >= 0; i--) {
+        if (s[i] == '/') return result;
+        result = s[i] + result;
+      }
+      return result;
+    }
+    let newAppChildren = [];
+    //loop thru tracelist get endpt
+    for (let n = 0; n < traceList.length; n++) {
+      const url = traceList[n].fullData.Document.http.request.url;
+      const endpt = getFromRight(url)
+      // let errors = findErrorsInTrace(traceList[n]);
+
+      //ADDING TO APP TREE CHILDREN
+
+      let found = false;
+      // console.log(`this is trace${n} endpt`, endpt)
+      //loop thru children get endpt
+      for (let j = 0; j < newAppChildren.length; j++) {
+        let appChildrenUrl = newAppChildren[j].fullData.Document.http.request.url;
+        let appChildrenEndpt = getFromRight(appChildrenUrl)
+        // console.log(`this is appchild${j} endpt`, appChildrenEndpt)
+        if (appChildrenEndpt == endpt) {
+          found = true;
+        }
+      }
+      if (!found) {
+        // console.log('shud b adding')
+        newAppChildren.push(traceList[n]);
+      }
+    }
+    console.log('this is apptreechildren',newAppChildren);
+    let logs = [];
+    for (let i = 0; i < newAppChildren.length; i++){
+      logs=[...logs,...traceList[i].logs]
+    }
+    let client = {
+      id :'client',
+      name:'client',
+      logs: logs,
+      children: newAppChildren,
+      origin: 'client',
+      //fulldata, has .Document
+    }
+    setAppTreeNode(client);
+    //ADDING TO APP TREE CHILDREN
+    setAppLogs(logs);
+    console.log('this is logs: ', logs);
+    if (newAppChildren.length!= 0) {
+      console.log(newAppChildren[0].fullData.Document)
+
+    }
+
+  }, [traceList])
+
   function logout() {
     fetch('/logout', {
       method: 'GET',
@@ -88,6 +150,12 @@ const Dashboard = () => {
             traceLogData={traceList[currentTrace].logs}
           />
         )}
+        {currentPage === 'AppTree' && (
+          <EventGraph
+            nodeData={appTreeNode}
+            traceLogData={appLogs}
+          />
+        )}
         {currentPage === 'TraceList' && (
           <TraceList
             traces={traceList}
@@ -96,6 +164,8 @@ const Dashboard = () => {
             refresh={refresh}
             loading={loading}
             currentTrace={currentTrace}
+            appTreeChildren = {appTreeChildren}
+            setAppTreeChildren = {setAppTreeChildren}
           />
         )}
         {currentPage === 'Settings' && (
@@ -114,6 +184,9 @@ const Dashboard = () => {
           </button>
           <button onClick={() => setCurrentPage('EventGraph')}>
             <img src={eventGraphIcon} width='16px'></img>
+          </button>
+          <button onClick={() => setCurrentPage('AppTree')}>
+            <img src={mapIcon} width='16px'></img>
           </button>
           <button onClick={() => setCurrentPage('TraceList')}>
             <img src={traceListIcon} width='16px'></img>

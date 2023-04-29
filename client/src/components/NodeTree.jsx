@@ -8,8 +8,17 @@ import sesIcon from '../assets/sesIcon.svg'
 import errorIcon from '../assets/error-905.svg'
 import errorIcon2 from '../assets/error-svgrepo-com.svg'
 import rs from '../assets/react.svg'
+import clientIcon from '../assets/client-svgrepo-com.svg'
 import './custom-tree.css';
 
+/*
+  name = ""
+  id = ""
+  origin = ""
+  fullData -> Document = {}
+  children = []
+
+*/
 
 const NodeTree = (props) => {
   const getDynamicPathClass = ({ source, target }, orientation) => {
@@ -30,6 +39,7 @@ const NodeTree = (props) => {
     else if (nType == 'AWS::SES') return sesIcon;
     else if (nType == 'simpleNotification') return simpleNotificationIcon;
     else if (nType == 'thrownError') return errorIcon;
+    else if (nType == 'client') return clientIcon;
     else {
       console.log('Got unknown origin: ' + nType)
       return rs;
@@ -83,8 +93,8 @@ const NodeTree = (props) => {
           onMouseEnter={(e) => handleMouseEnter(e, nodeDatum)}
           onMouseLeave={(e) => handleMouseLeave(e)}
           />
-      <circle r={getErrorDim(nodeDatum.fullData.Document.error)/2.5} fill='#ff0000' cx="12" cy="12" />
-      <image x="0" y="0" width={getErrorDim(nodeDatum.fullData.Document.error)}
+      <circle r={(nodeDatum.fullData ? getErrorDim(nodeDatum.fullData.Document.error)/2.5 : 1)} fill='#ff0000' cx="12" cy="12" />
+      <image x="0" y="0" width={(nodeDatum.fullData ? getErrorDim(nodeDatum.fullData.Document.error) : 1)}
         href={errorIcon2} />
       <text stroke="#dddddd" strokeWidth="1" x="-50" y="40" fontSize="x-small">
       {nodeDatum.name}
