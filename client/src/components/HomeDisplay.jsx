@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SimpleDataDisplay from './SimpleDataDisplay';
 import { PieChart } from 'react-minimal-pie-chart';
 import spinner from '../assets/pulse-1.1s-200px.svg';
-import './Homedisplay.css';
+import './HomeDisplay.css';
 
 const getStartLocale = (startSec) => {
   let start = new Date(0);
