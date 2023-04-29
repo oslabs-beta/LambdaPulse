@@ -24,27 +24,25 @@ const findErrorsInTrace = (trace) => {
 }
 
 const TraceSelector = (props) => {
-
-    const traces = [];
-    console.log('drawing some traces')
-    for (let n = 0; n < props.traces.length; n++) {
-        const url = props.traces[n].fullData.Document.http.request.url;
-        const endpt = getFromRight(url)
-        const startTime = props.traces[n].fullData.Document.start_time;
-        const endTime = props.traces[n].fullData.Document.end_time;
-        let startFilter;
-        try {startFilter = props.start_value.getTime()}
-        catch (e) {startFilter = props.start_value}
-        startFilter /= 1000;
-        let endFilter;
-        try {endFilter = props.end_value.getTime()}
-        catch (e) {endFilter = props.end_value}
-        endFilter /= 1000;
+  const traces = [];
+  for (let n = 0; n < props.traces.length; n++) {
+    const url = props.traces[n].fullData.Document.http.request.url;
+    const endpt = getFromRight(url)
+    const startTime = props.traces[n].fullData.Document.start_time;
+    const endTime = props.traces[n].fullData.Document.end_time;
+    let startFilter;
+    try {startFilter = props.start_value.getTime()}
+    catch (e) {startFilter = props.start_value}
+    startFilter /= 1000;
+    let endFilter;
+    try {endFilter = props.end_value.getTime()}
+    catch (e) {endFilter = props.end_value}
+    endFilter /= 1000;
 
 
-        if (startTime >= startFilter && endTime <= endFilter) {
-          let errors = findErrorsInTrace(props.traces[n]);
-          traces.push(<button key={'tb'+Math.random()} 
+    if (startTime >= startFilter && endTime <= endFilter) {
+      let errors = findErrorsInTrace(props.traces[n]);
+      traces.push(<button key={'tb'+Math.random()} 
                               onClick={() => props.setCurrentTrace(n)}
                               style={{fontSize: 'small'}}>
                               <span>{endpt + ' - '
