@@ -1,3 +1,4 @@
+import React from 'react';
 import DebugTraceDisplay from './DebugTraceDisplay'
 import spinner from '../assets/pulse-1.1s-200px.svg';
 import './Homedisplay.css';
@@ -62,7 +63,6 @@ function TraceList (props) {
     //changes refresh which fires off useEffect(in dashboard.jsx) to fetch new data
     props.setRefresh(!props.refresh);
   }
-
   return (
     <div className='trace-list-container'>
       <p>TraceList</p>

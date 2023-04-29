@@ -10,7 +10,7 @@ const {
   CloudWatchLogsClient,
   FilterLogEventsCommand,
 } = require('@aws-sdk/client-cloudwatch-logs');
-const aws = require('aws-sdk');
+// const aws = require('aws-sdk');
 
 const Redis = require('redis');
 const redisClient = Redis.createClient();
@@ -61,7 +61,7 @@ const main = require('./sortingSegments');
 //     console.log(err, ' in gettracedetails');
 //   });
 
-console.log('out of get logs');
+// console.log('out of get logs');
 const getTraceMiddleware = {
   getSummary: async (req, res, next) => {
     if (res.locals.redisTraces != undefined) return next();
@@ -229,13 +229,7 @@ const getTraceMiddleware = {
       console.log('userId:', userId);
 
       console.log('this is nodes', allNodes);
-      try {
-        console.log('HOOBLA');
-        redisClient.set('Traces', JSON.stringify(allNodes));
-        console.log('HOOBLA PT 2');
-      } catch (err) {
-        next(err);
-      }
+      
       // inserting new traces into traces table
       try {
         const insertTraceQuery = `
@@ -285,6 +279,14 @@ const getTraceMiddleware = {
         res.locals.userTraces = userTraces;
       } catch (err) {
         console.log('error', err);
+        next(err);
+      }
+
+      try {
+        console.log('HOOBLA');
+        redisClient.set('Traces', JSON.stringify(res.locals.userTraces));
+        console.log('HOOBLA PT 2');
+      } catch (err) {
         next(err);
       }
 
