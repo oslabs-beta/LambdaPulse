@@ -10,7 +10,7 @@ const jwtController = require('./controllers/jwtController');
 const cookieParser = require('cookie-parser');
 const { query } = require('./db.config.js');
 
-
+app.use("/client", express.static('../client/'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -102,7 +102,11 @@ app.get('/getErrLogs', redisController.getErrLogs, (req, res) => {
 });
 
 //Route not found
-app.use((req, res) => res.sendStatus(404));
+app.use((req, res, err) => 
+{
+  console.log(err);
+  res.sendStatus(404)
+});
 
 //Global error handler
 app.use((err, req, res, next) => {
