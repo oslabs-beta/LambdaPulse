@@ -1,4 +1,4 @@
-import React from 'react';
+import {useEffect,useState} from 'react';
 import DebugTraceDisplay from './DebugTraceDisplay'
 import spinner from '../assets/pulse-1.1s-200px.svg';
 import './HomeDisplay.css';
