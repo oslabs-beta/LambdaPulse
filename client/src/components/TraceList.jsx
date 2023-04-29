@@ -33,6 +33,24 @@ function TraceList (props) {
         const url = props.traces[n].fullData.Document.http.request.url;
         const endpt = getFromRight(url)
         let errors = findErrorsInTrace(props.traces[n]);
+
+        // //ADDING TO APP TREE CHILDREN
+        // let found = false;
+        // for (let j = 0; j < props.appTreeChildren.length; j++) {
+          
+        //   let appChildrenUrl = props.appTreeChildren[j].fullData.Document.http.request.url;
+        //   let appChildrenEndpt = getFromRight(url)
+        //   if (appChildrenEndpt == endpt) {
+        //     found = true;
+        //   }
+        // }
+        // if (!found) {
+        //   let newAppChildren = props.appTreeChildren.slice();
+        //   newAppChildren.push(props.traces[n]);
+        //   props.setAppTreeChildren(newAppChildren);
+        // }
+        // //ADDING TO APP TREE CHILDREN
+        
         traces.push(<button key={'tb'+Math.random()} 
                             onClick={() => props.setCurrentTrace(n)}>
                             <span>{endpt + ' - ' + 
@@ -62,7 +80,6 @@ function TraceList (props) {
     //changes refresh which fires off useEffect(in dashboard.jsx) to fetch new data
     props.setRefresh(!props.refresh);
   }
-
   return (
     <div className='trace-list-container'>
       <p>TraceList</p>
