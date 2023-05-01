@@ -15,7 +15,8 @@ const getCredentials = async (userArn) => {
       sessionToken: data.Credentials.SessionToken,
     };
     console.log('no errors detected');
-    return { credentials: temporaryCredentials, user_Arn: userArn };
+    // return { credentials: temporaryCredentials, user_Arn: userArn };
+    return temporaryCredentials;
   } catch (err) {
     console.log('Error in getCreds');
     console.log(err);
