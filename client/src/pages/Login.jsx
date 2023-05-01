@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import { Link } from 'react-router-dom';
+import { getApiBaseUrl } from '../apiBaseUrl.js';
 
 import './Login.css';
 
@@ -17,7 +18,7 @@ const Login = () => {
       email,
       password,
     };
-    fetch('/verifyUser', {
+    fetch(`${getApiBaseUrl()}/verifyUser`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(userData),
@@ -53,7 +54,7 @@ const Login = () => {
 
         <label htmlFor='email'>Email</label>
         <input
-          type='text'
+          type='email'
           id='email'
           required
           onChange={(e) => setEmail(e.target.value)}
