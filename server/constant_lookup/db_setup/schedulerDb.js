@@ -35,7 +35,11 @@ const getArns = () => {
                 `SELECT * FROM "${tableName}"`
               );
               for (const nodes of tableData.rows) {
-                if (!uniqueArns.includes(nodes.role_arn) && nodes.role_arn)
+                if (
+                  !uniqueArns.includes(nodes.role_arn) &&
+                  nodes.role_arn &&
+                  nodes.role_arn.startsWith('arn')
+                )
                   uniqueArns.push(nodes.role_arn);
               }
             } catch (tableErr) {
