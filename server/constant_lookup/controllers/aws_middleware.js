@@ -44,10 +44,48 @@ const getConstantTrace = {
         return node.Id;
       });
 
-      console.log(traceIds);
+      // console.log(traceIds);
       return traceIds;
     } catch (err) {
       console.log('error');
+      throw err;
+    }
+  },
+
+  getSegmentArray: async (temp_credentials, traceArray) => {
+    console.log('in getSegmentArray');
+    const xClient = new XRayClient({
+      credentials: temp_credentials,
+      region: 'us-east-1',
+    });
+    const getTraceDetails = async (traceIds) => {
+      const params = {
+        TraceIds: traceIds,
+      };
+
+      const response = await xClient.send(new BatchGetTracesCommand(params));
+      return response;
+    };
+    try {
+      let fullTraceArray = [];
+
+      let currTraceIds = [];
+      while (traceArray.length) {
+        if (currTraceIds.length < 5) currTraceIds.push(traceArray.shift());
+        else {
+          const result = await getTraceDetails(currTraceIds);
+          fullTraceArray = fullTraceArray.concat(result.Traces);
+          currTraceIds = [];
+        }
+      }
+      if (currTraceIds.length > 0) {
+        const result = await getTraceDetails(currTraceIds);
+        fullTraceArray = fullTraceArray.concat(result.Traces);
+      }
+      console.log(fullTraceArray, 'this is full trace array');
+      return fullTraceArray;
+    } catch (err) {
+      console.log(err);
       throw err;
     }
   },

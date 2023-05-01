@@ -16,13 +16,19 @@ const main = async () => {
   if (!currNodes || (expirationTime && currentTime > expirationTime)) {
     const arnArray = await getArns();
     currNodes = await getCredentialsForAllArns(arnArray);
+
     expirationTime = currentTime + 60 * 60 * 1000;
   }
 
   for (let i = 0; i < currNodes.length; i++) {
     try {
       console.log('in for loop');
+      console.log(currNodes[i]);
       const result = await getConstantTrace.getSummary(currNodes[i]);
+      console.log(result);
+      if (result.length < 1) {
+        console.log('in if statement on line 30');
+      }
     } catch (error) {
       console.log('error in for loop');
     }
