@@ -15,6 +15,31 @@ const pool = new Pool({
   port: port,
 });
 
+const showAllTables = async () => {
+  try {
+    const tableRes = await pool.query(
+      `SELECT table_name
+       FROM information_schema.tables
+       WHERE table_schema = 'public'
+       ORDER BY table_name`
+    );
+    const tableNames = tableRes.rows.map((row) => row.table_name);
+
+    console.log('List of tables:');
+    for (const tableName of tableNames) {
+      console.log(`\nTable: ${tableName}`);
+      const tableData = await pool.query(`SELECT * FROM "${tableName}"`);
+      console.log('Data:');
+      console.table(tableData.rows);
+    }
+  } catch (err) {
+    console.error('Error fetching tables:', err);
+  }
+};
+
+// Call the function
+// showAllTables();
+
 const getArns = () => {
   return new Promise((resolve, reject) => {
     pool.query(
@@ -59,4 +84,24 @@ const getArns = () => {
   });
 };
 
-module.exports = { getArns };
+// get arns and users
+
+const getUsersAndArns = async () => {
+  try {
+    const usersData = await pool.query(`SELECT _id, role_arn FROM "users"`);
+
+    const usersAndArns = usersData.rows
+      .filter((row) => row.role_arn && row.role_arn.startsWith('arn'))
+      .map((row) => ({
+        id: row._id,
+        role_arn: row.role_arn,
+      }));
+
+    return usersAndArns;
+  } catch (err) {
+    console.error('Error fetching users and ARNs:', err);
+    throw err;
+  }
+};
+
+module.exports = { getArns, getUsersAndArns };

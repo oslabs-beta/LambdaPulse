@@ -26,9 +26,16 @@ const getCredentialsForAllArns = async (array_of_arns) => {
   const temporary_creds = [];
   try {
     // gets credentials for individual users
+    // now its an array of objects with 2 properites id and role_arn
     for (const arn of array_of_arns) {
-      const result = await getCredentials(arn);
-      temporary_creds.push(result);
+      // console.log(arn);
+      const result = await getCredentials(arn.role_arn);
+      const idAndCreds = {
+        tempCreds: result,
+        id: arn.id,
+      };
+
+      temporary_creds.push(idAndCreds);
     }
   } catch (err) {
     console.log(err);
