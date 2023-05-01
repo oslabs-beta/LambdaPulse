@@ -1,22 +1,34 @@
-// login.test.js
-import { render, screen, fireEvent } from '@testing-library/react';
-import Login from '../src/pages/Login';
-import Signup from '../src/pages/Signup';
-
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import '@testing-library/jest-dom';
-
+import App from '../client/src/App';
+import Login from '../client/src/pages/Login';
+import Signup from '../client/src/pages/Signup';
+import Settings from '../client/src/components/Settings';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+import server from './server-mock';
 
-// test('display error message when submitting an empty form', async () => {
-//   render(<Login />, { wrapper: BrowserRouter });
+// setting up mock server for tests
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
-//   const submitButton = screen.getByRole('button', { name: /log in/i });
-//   userEvent.click(submitButton);
+// testing App.jsx
+test('full app rendering/navigating', async () => {
+  render(<App />, { wrapper: BrowserRouter });
+  const user = userEvent.setup();
 
-//   const errorMessage = await screen.findByTestId('error-message');
-//   expect(errorMessage).toHaveTextContent('Invalid password or email');
-// });
+  // verify page content for default route (Login page)
+  expect(screen.getByText(/Login/i)).toBeInTheDocument();
+  screen.debug();
+
+  // verify page content for expected route after navigating (Signup page)
+  userEvent.click(screen.getByRole('link', { name: /Sign Up/i }));
+  expect(screen.getByText(/Sign Up/i)).toBeInTheDocument();
+});
+
+
 
 describe('correctly render Login', () => {
   beforeEach(() => render(<Login />, { wrapper: BrowserRouter }));
@@ -44,6 +56,8 @@ describe('correctly render Login', () => {
     expect(link.length).toEqual(1);
   });
 });
+
+// testing Signup.jsx
 
 describe('correctly render Signup', () => {
   beforeEach(() => render(<Signup />, { wrapper: BrowserRouter }));
@@ -82,5 +96,34 @@ describe('correctly render Signup', () => {
       name: /LOGIN/i,
     });
     expect(link.length).toEqual(1);
+  });
+});
+
+describe('correctly render Settings', () => {
+  beforeEach(() => render(<Settings />, { wrapper: BrowserRouter }));
+
+  test('correctly renders header in Settings', () => {
+    expect(
+      screen.getByRole('heading', { name: /settings/i })
+    ).toBeInTheDocument();
+  });
+
+  test('correctly renders current ARN in Settings', () => {
+    const currentArnText = screen.getByText(/current arn/i);
+    expect(currentArnText).toBeInTheDocument();
+  });
+
+  test('correctly renders button and input field in Settings', async () => {
+    const button = await screen.getAllByRole('button');
+    expect(button.length).toEqual(1);
+
+    const input = screen.getByPlaceholderText('ARN Key');
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute('type', 'text');
+  });
+
+  test('correctly renders submit button in Settings', () => {
+    const submitButton = screen.getByRole('button', { name: /set arn/i });
+    expect(submitButton).toBeInTheDocument();
   });
 });
