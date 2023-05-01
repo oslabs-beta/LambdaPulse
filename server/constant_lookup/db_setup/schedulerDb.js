@@ -55,6 +55,4 @@ const getArns = () => {
   });
 };
 
-getArns();
-
 module.exports = { getArns };
