@@ -132,7 +132,7 @@ const getConstantTrace = {
           const startTime = new Date(endTime.getTime() - 60 * 60 * 1000);
 
           const cloudwatchlogs = new CloudWatchLogsClient({
-            credentials: res.locals.awsCredentials,
+            credentials: awsCredentials,
             region: 'us-east-1',
           });
 

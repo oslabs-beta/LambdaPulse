@@ -30,6 +30,7 @@ const jwtController = {
         // console.log("this is req", req);
         try {
             const user = jwt.verify(token,process.env.JWT_KEY);
+            console.log(user + ' connected')
             const userId = user.id;
             res.locals.userId = userId;
             return next();
