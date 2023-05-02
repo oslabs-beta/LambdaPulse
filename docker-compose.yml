@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  prod:
+    build: .
+    container_name: lambdapulse-test3
+    ports:
+      - '4173:4173'
+    networks:
+      - lambdapulse-network
+    volumes:
+      - ./:/usr/src/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    command: npm run serve
+
+  redis:
+    container_name: redis
+    image: redis-pulse
+    command: ['redis-server', '--bind', 'redis', '--port', '6379']
+
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    networks:
+      - lambdapulse-network
+
+networks:
+  lambdapulse-network:
+    driver: bridge

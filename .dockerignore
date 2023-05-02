@@ -1,0 +1,4 @@
+.env
+node_modules
+__tests__
+.DS_Store

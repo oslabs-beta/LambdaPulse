@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -21,6 +21,8 @@ export default defineConfig(({ mode }) => {
   };
 
   config.server = {
+    host: true,
+    port: 3000, 
     proxy: {
       '/getTraces': 'http://localhost:3000/',
       '/clearTraces': 'http://localhost:3000/',
