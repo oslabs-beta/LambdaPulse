@@ -1,0 +1,101 @@
+  main {
+    height: 100vh;
+    width: 100%;
+  }
+  
+  section {
+    font-family: sans-serif;
+    font-size: 12ch;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  section:nth-child(1) {
+    background: #252525;
+    color: white;
+  }
+  
+  section:nth-child(2) {
+    background: #191919;
+    color: white;
+  }
+
+  section:nth-child(3) {
+    background: #252525;
+    color: white;
+  }
+
+  .about-signup-btn {
+    color: #080710;
+    margin-top: 30px;
+    background-color: #ffffff;
+    background: linear-gradient(to bottom right, #fd3302, #ff9a5a);
+    transition: box-shadow 0.2s ease-in-out;
+    height: 2em;
+  }
+  
+  .about-signup-btn:not([disabled]):hover {
+    box-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.5),
+      -0.125rem -0.125rem 1rem rgba(239, 71, 101, 0.5),
+      0.125rem 0.125rem 1rem rgba(255, 154, 90, 0.5);
+  }
+
+  .about-hero {
+    font-size: large;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .about-hero-left {
+    flex: 1;
+    float: left;
+    font-size: larger;
+    align-items: center;
+    justify-content: center; 
+  }
+
+  .about-hero-right {
+    flex: 1;
+    float: right;
+    font-size: larger;
+    align-items: center;
+    justify-content: center; 
+  }
+
+  .about-features {
+    font-size: large;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .about-features-left {
+    float: left;
+    font-size: larger;
+    align-items: center;
+    justify-content: center; 
+  }
+
+  .about-features-right {
+    float: right;
+    font-size: larger;
+    align-items: center;
+    justify-content: left; 
+    text-align: left;
+    margin-left: 5em;
+  }
+
+  .about-cta {
+    justify-content: left; 
+    align-items: center;
+    text-align: left;
+    display: flex;
+    font-size: x-large;
+    color: white;
+  }
