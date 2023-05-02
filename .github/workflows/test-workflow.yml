@@ -1,0 +1,14 @@
+name: Test GitHub Actions
+
+on: push
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Run a simple shell script
+        run: |
+          echo "Hello, world!"
+          echo "This is a test GitHub Actions workflow."
