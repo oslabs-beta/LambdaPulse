@@ -17,9 +17,8 @@ services:
 
   redis:
     container_name: redis
-    image: redis-pulse
+    image: redis:latest
     command: ['redis-server', '--bind', 'redis', '--port', '6379']
-
     restart: always
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
