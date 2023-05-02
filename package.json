@@ -11,7 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vite build --mode test && vitest",
-    "fullprod": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \"cd ./client/dist && http-server\""
+    "fullprod": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \"cd ./client/dist && http-server\"",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
