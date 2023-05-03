@@ -11,6 +11,8 @@ const cookieParser = require('cookie-parser');
 const { query } = require('./db.config.js');
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use(express.static(path.join(__dirname, '../client')));
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,43 +33,57 @@ app.get('/api', (req, res) => {
   res.status(200).json(data);
 });
 
+app.post(
+  '/createUser',
+  userController.createUser,
+  jwtController.createJwt,
+  (req, res) => {
+    console.log('in create user');
+    res.sendStatus(201);
+  }
+);
 
-app.post('/createUser', userController.createUser, jwtController.createJwt, (req, res) => {
-  console.log('in create user');
-  res.sendStatus(201);
-});
+app.post(
+  '/verifyUser',
+  userController.verifyUser,
+  jwtController.createJwt,
+  (req, res) => {
+    //successful login
+    // res.redirect('homepage');
+    res.sendStatus(200);
+  }
+);
 
-app.post('/verifyUser', userController.verifyUser, jwtController.createJwt, (req, res) => {
-  //successful login
-  // res.redirect('homepage');
-  res.sendStatus(200);
-});
-
-app.get('/logout',redisController.clearTraces, userController.logout);
+app.get('/logout', redisController.clearTraces, userController.logout);
 
 // app.post('/setLogs', redisController.setLogs, (req, res) => {
 //   //successful login
 //   // res.redirect('homepage');
 //   res.sendStatus(200);
 // });
-app.get('/getCurrentArn', jwtController.verifyJwt, async(req,res) => {
-  const currentArn = await query('SELECT role_arn FROM users WHERE _id = $1 ; ', [res.locals.userId]);
+app.get('/getCurrentArn', jwtController.verifyJwt, async (req, res) => {
+  const currentArn = await query(
+    'SELECT role_arn FROM users WHERE _id = $1 ; ',
+    [res.locals.userId]
+  );
   res.status(200).send(currentArn);
-})
+});
 
-app.post('/setUserARN', jwtController.verifyJwt, async (req,res)  => {
-  console.log('in Set User ARN')
+app.post('/setUserARN', jwtController.verifyJwt, async (req, res) => {
+  console.log('in Set User ARN');
   const { userARN } = req.body;
   const userId = res.locals.userId;
-  console.log(userId)
+  console.log(userId);
   try {
-    await query('UPDATE users SET role_arn = $1 WHERE _id = $2 ;', [userARN,userId])
-
-  } catch(err) {
-    console.log('Error setting roleARN', err)
+    await query('UPDATE users SET role_arn = $1 WHERE _id = $2 ;', [
+      userARN,
+      userId,
+    ]);
+  } catch (err) {
+    console.log('Error setting roleARN', err);
   }
-  res.status(200).send({success:'User ARN successfully added!'});
-})
+  res.status(200).send({ success: 'User ARN successfully added!' });
+});
 
 app.get(
   '/getTraces',
@@ -93,8 +109,6 @@ app.get('/getLogs', redisController.getLogs, (req, res) => {
   res.status(200).json(res.locals.logs);
 });
 
-
-
 app.get('/getErrLogs', redisController.getErrLogs, (req, res) => {
   //successful login
   // res.redirect('homepage');
@@ -102,10 +116,9 @@ app.get('/getErrLogs', redisController.getErrLogs, (req, res) => {
 });
 
 //Route not found
-app.use((req, res, err) => 
-{
+app.use((req, res, err) => {
   console.log(err);
-  res.sendStatus(404)
+  res.sendStatus(404);
 });
 
 //Global error handler
