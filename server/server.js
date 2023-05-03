@@ -51,7 +51,6 @@ app.post(
 
 app.get('/logout', redisController.clearTraces, userController.logout);
 
-
 app.get('/getCurrentArn', jwtController.verifyJwt, async (req, res) => {
   const currentArn = await query(
     'SELECT role_arn FROM users WHERE _id = $1 ; ',
@@ -94,6 +93,17 @@ app.get('/clearTraces', redisController.clearTraces, (req, res) => {
   res.sendStatus(200);
 });
 
+// routes to access pages on refresh or through link
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
 
 //Route not found
 app.use((req, res, err) => {
