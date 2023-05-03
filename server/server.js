@@ -9,9 +9,10 @@ const getTraceMiddleware = require('./aws_sdk/traceDetails');
 const jwtController = require('./controllers/jwtController');
 const cookieParser = require('cookie-parser');
 const { query } = require('./db.config.js');
+const path = require('path');
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
-app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 app.use(cors());
 app.use(express.json());
