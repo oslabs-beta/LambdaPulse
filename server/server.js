@@ -44,7 +44,7 @@ app.post(
   jwtController.createJwt,
   (req, res) => {
     //successful login
-    // res.redirect('homepage');
+    // res.redirect('homepage')
     res.sendStatus(200);
   }
 );
@@ -88,10 +88,6 @@ app.get(
     res.status(200).json(res.locals.userTraces);
   }
 );
-
-app.get('/clearTraces', redisController.clearTraces, (req, res) => {
-  res.sendStatus(200);
-});
 
 // routes to access pages on refresh or through link
 app.get('/signup', (req, res) => {
