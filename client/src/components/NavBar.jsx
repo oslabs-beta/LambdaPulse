@@ -1,6 +1,7 @@
 import React from "react"
 import './nav-bar.css'
 import pulse from '../assets/pulse.svg'
+import { Link } from 'react-router-dom';
 
 
 const NavBar = (props) => {
@@ -11,8 +12,11 @@ const NavBar = (props) => {
         <h1>LambdaPulse</h1>
       </div>
       <div id="links">
-        <p>About</p>
-        <p>Docs</p>
+        <p>        
+          <Link to='/about'>
+           <span>About</span>
+          </Link></p>
+        <p><a href="https://github.com/oslabs-beta/LambdaPulse" target="_blank">Docs</a></p>
       </div>
     </div>
   )
