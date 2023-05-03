@@ -7,8 +7,6 @@ import TraceFilters from './TraceFilters';
 
 function TraceList (props) {
 
-  const [start_value, onChangeStart] = useState(new Date()-1000*60*60*24*7);
-  const [end_value, onChangeEnd] = useState(new Date());
 
   function refreshData() {
     //clears Traces table from redis
@@ -28,13 +26,13 @@ function TraceList (props) {
         )}
       </div>
       <TraceSelector traces={props.traces}
-                start_value={start_value}
-                end_value={end_value} 
+                start_value={props.start_value}
+                end_value={props.end_value} 
                 setCurrentTrace = {props.setCurrentTrace} />
       <div style={{flexDirection: 'column', width: '100%'}}>
         <TraceFilters handleRefreshData={refreshData} 
-              start_value={start_value} onChangeStart={onChangeStart}
-              end_value={end_value} onChangeEnd={onChangeEnd}/>
+              start_value={props.start_value} onChangeStart={props.onChangeStart}
+              end_value={props.end_value} onChangeEnd={props.onChangeEnd}/>
         <DebugTraceDisplay trace={props.traces[props.currentTrace]} />
       </div>
     </div>

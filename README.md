@@ -40,6 +40,7 @@ However, if you'd like to fork & host your own local copy of LambdaPulse, instru
 | Ingest traces from AWS                                               | ✅        |
 | Display tree graph of traces and application      | ✅        |
 | Display logs and trace details                                                                      | ✅        |
+| Hyperlink into logs                                                                  | 🙏🏻        |
 | Filter logs on click in node graph                                                                  | 🙏🏻        |
 | Change tree graph to a network to better show crossover between traces                                 | 🙏🏻        |
 | Refactor to use Typescript                                                         | 🙏🏻        |
