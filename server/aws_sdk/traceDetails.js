@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { query } = require('../db.config.js');
+const Redis = require('ioredis');
 
 const {
   XRayClient,
@@ -11,13 +12,18 @@ const {
   FilterLogEventsCommand,
 } = require('@aws-sdk/client-cloudwatch-logs');
 
-const Redis = require('ioredis');
+let redisClient;
 
-let redisClient = new Redis({
-  port: 6379,
-  host: 'redis',
-});
-
+if (process.env.NODE_ENV === 'DEV' || process.env.NODE_ENV === 'TEST') {
+  console.log('devmode in rediscontroller');
+  redisClient = new Redis();
+} else {
+  console.log('not devmode in rediscontroller');
+  redisClient = new Redis({
+    host: 'redis',
+    port: 6379,
+  });
+}
 redisClient.on('connect', () => {
   console.log('Connected to Redis.');
 });
