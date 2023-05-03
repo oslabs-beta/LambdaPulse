@@ -1,6 +1,6 @@
-const express = require('express'),
-  PORT = 3000,
-  app = express();
+const express = require('express');
+const PORT = process.env.PORT || '3000';
+app = express();
 const cors = require('cors');
 const userController = require('./controllers/userController');
 const redisController = require('./controllers/redisController');
