@@ -4,4 +4,4 @@ COPY . /user/src/app
 RUN npm install
 RUN npm run build
 EXPOSE 4173
-# CMD ["npm", "run", "serve"]
+CMD ["npm", "run", "serve"]
