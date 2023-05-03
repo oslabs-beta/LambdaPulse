@@ -2,9 +2,9 @@ version: '3.9'
 services:
   prod:
     build: .
-    container_name: lambdapulse-test3
+    container_name: lambdapulse-prod
     ports:
-      - '3000:3000'
+      - '80:3000'
     networks:
       - lambdapulse-network
     volumes:
