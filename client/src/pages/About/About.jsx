@@ -60,7 +60,7 @@ const About = () => {
           </div>
           <div className='about-cta'>
             <Link to='/signup'>
-              <button className='about-signup-btn' style={{width: '20em',height: '8em'}}>Sign Up</button>
+              <button className='about-signup-btn' style={{width: '20em',height: '4em'}}>Sign Up Now</button>
             </Link>
           </div>
         </section>
