@@ -18,13 +18,13 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
     },
-    build: {
-      define: {
-        captchaKey: `"${process.env.VITE_CAPTCHA_KEY}"`,
-      },
-    },
-  };
 
+  };
+  if (mode === 'production') {
+    config.define = {
+      'import.meta.env.VITE_CAPTCHA_KEY': process.env.VITE_CAPTCHA_KEY,
+    };
+  }
   config.server = {
     host: true,
     port: 3000,
