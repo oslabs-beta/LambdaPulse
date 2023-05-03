@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "test": "vite build --mode test && vitest",
     "test:coverage": "vitest --coverage",
-    "serve": "concurrently \"npm run server\" \"vite preview\"",
+    "serve": "concurrently \"npm run server\"",
     "fullprod": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \"cd ./client/dist && http-server\"",
     "redis-test": "node redis_test.js"
   },

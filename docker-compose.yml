@@ -4,7 +4,7 @@ services:
     build: .
     container_name: lambdapulse-test3
     ports:
-      - '4173:4173'
+      - '3000:3000'
     networks:
       - lambdapulse-network
     volumes:
