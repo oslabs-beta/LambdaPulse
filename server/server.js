@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser');
 const { query } = require('./db.config.js');
 const path = require('path');
 
-// app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 app.use(cors());
@@ -27,11 +26,6 @@ app.use(function (req, res, next) {
   );
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
-});
-
-app.get('/api', (req, res) => {
-  let data = 'hello';
-  res.status(200).json(data);
 });
 
 app.post(
@@ -57,11 +51,7 @@ app.post(
 
 app.get('/logout', redisController.clearTraces, userController.logout);
 
-// app.post('/setLogs', redisController.setLogs, (req, res) => {
-//   //successful login
-//   // res.redirect('homepage');
-//   res.sendStatus(200);
-// });
+
 app.get('/getCurrentArn', jwtController.verifyJwt, async (req, res) => {
   const currentArn = await query(
     'SELECT role_arn FROM users WHERE _id = $1 ; ',
@@ -104,17 +94,6 @@ app.get('/clearTraces', redisController.clearTraces, (req, res) => {
   res.sendStatus(200);
 });
 
-app.get('/getLogs', redisController.getLogs, (req, res) => {
-  //successful login
-  // res.redirect('homepage');
-  res.status(200).json(res.locals.logs);
-});
-
-app.get('/getErrLogs', redisController.getErrLogs, (req, res) => {
-  //successful login
-  // res.redirect('homepage');
-  res.status(200).json(res.locals.logs);
-});
 
 //Route not found
 app.use((req, res, err) => {

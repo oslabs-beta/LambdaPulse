@@ -7,7 +7,6 @@ dotenv.config({ path: path.resolve(__dirname, './.env') });
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const isTest = mode === 'test';
 
   const config = {
     plugins: [react()],
@@ -18,16 +17,11 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
     },
-
   };
-  if (mode === 'production') {
-    config.define = {
-      'import.meta.env.VITE_CAPTCHA_KEY': process.env.VITE_CAPTCHA_KEY,
-    };
-  }
+
   config.server = {
     host: true,
-    port: 3000,
+    port: 3000, 
     proxy: {
       '/getTraces': 'http://localhost:3000/',
       '/clearTraces': 'http://localhost:3000/',
@@ -37,7 +31,6 @@ export default defineConfig(({ mode }) => {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      // 'http://localhost:3000/',
       '/logout': 'http://localhost:3000/',
       '/setUserARN': 'http://localhost:3000/',
       '/getCurrentArn': 'http://localhost:3000/',
