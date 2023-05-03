@@ -10,58 +10,24 @@ const {
   CloudWatchLogsClient,
   FilterLogEventsCommand,
 } = require('@aws-sdk/client-cloudwatch-logs');
-// const aws = require('aws-sdk');
 
-const Redis = require('redis');
-const redisClient = Redis.createClient();
-redisClient.connect();
+const Redis = require('ioredis');
+
+let redisClient = new Redis({
+  port: 6379,
+  host: 'redis',
+});
+
+redisClient.on('connect', () => {
+  console.log('Connected to Redis.');
+});
+
 redisClient.on('error', (err) => {
   console.error(err);
 });
 
 const main = require('./sortingSegments');
-// const { query } = require('express');
-//redis client to add traces to redis
 
-// const awsCredentials = {
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//   region: process.env.AWS_REGION,
-// };
-
-// only needed if issues with aws cli
-// process.env.AWS_ACCESS_KEY_ID = awsCredentials.accessKeyId;
-// process.env.AWS_SECRET_ACCESS_KEY = awsCredentials.secretAccessKey;
-
-// const xClient = new XRayClient(awsCredentials);
-
-// console.log(getTraceSummary());
-
-// will return an array of traceIds.
-// getTraceSummary()
-//   .then((result) => {
-//     console.log(result);
-//     const traceArr = result.TraceSummaries;
-//     const traceIds = traceArr.map((node) => {
-//       return node.Id;
-//     });
-//     return traceIds;
-//   })
-//   .catch((err) => {
-//     console.log(err, 'err in getTraceSummary');
-//   });
-
-//below will give you the subsegments for each traceId
-
-// getTraceDetails(traceId)
-//   .then((result) => {
-//     console.log(result.Traces[0].Segments);
-//   })
-//   .catch((err) => {
-//     console.log(err, ' in gettracedetails');
-//   });
-
-// console.log('out of get logs');
 const getTraceMiddleware = {
   getSummary: async (req, res, next) => {
     if (res.locals.redisTraces != undefined) return next();
@@ -229,7 +195,7 @@ const getTraceMiddleware = {
       console.log('userId:', userId);
 
       console.log('this is nodes', allNodes);
-      
+
       // inserting new traces into traces table
       try {
         const insertTraceQuery = `
