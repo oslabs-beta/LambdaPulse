@@ -10,7 +10,7 @@ const jwtController = require('./controllers/jwtController');
 const cookieParser = require('cookie-parser');
 const { query } = require('./db.config.js');
 
-app.use("/client", express.static('../client/'));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
