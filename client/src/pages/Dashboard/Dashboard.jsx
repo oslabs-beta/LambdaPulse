@@ -29,6 +29,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [appTreeNode, setAppTreeNode] = useState({});
   const [appLogs, setAppLogs] = useState([]);
+  const [start_value, onChangeStart] = useState(new Date()-1000*60*60*24*7);
+  const [end_value, onChangeEnd] = useState(new Date());
 
   const navigate = useNavigate();
 
@@ -165,6 +167,10 @@ const Dashboard = () => {
             refresh={refresh}
             loading={loading}
             currentTrace={currentTrace}
+            start_value={start_value}
+            onChangeStart={onChangeStart}
+            end_value={end_value}
+            onChangeEnd={onChangeEnd}
           />
         )}
         {currentPage === 'Settings' && (
