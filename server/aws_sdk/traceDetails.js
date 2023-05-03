@@ -272,7 +272,7 @@ const getTraceMiddleware = {
         WHERE u._id = $1
         ORDER BY (t.root_node -> 'fullData' -> 'Document' ->> 'start_time')::double precision DESC;
       `;
-        const tracesResult = await query(selectTracesQuery, [userId]);
+        const tracesResult = await (selectTracesQuery, [userId]);
 
         const userTraces = tracesResult.rows.map((row) => row.root_node);
         console.log('this is userTraces', userTraces);
