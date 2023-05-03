@@ -18,18 +18,20 @@ export default defineConfig(({ mode }) => {
       globals: true,
       environment: 'jsdom',
     },
+    build: {
+      define: {
+        captchaKey: `"${process.env.VITE_CAPTCHA_KEY}"`,
+      },
+    },
   };
 
   config.server = {
-    // host: '0.0.0.0',
-    // port: 4173,
     host: true,
-    port: 3000, 
+    port: 3000,
     proxy: {
       '/getTraces': 'http://localhost:3000/',
       '/clearTraces': 'http://localhost:3000/',
       '/api': 'http://localhost:3000/',
-      '/blahblah': 'http://localhost:3000/',
       '/createUser': 'http://localhost:3000/',
       '/verifyUser': {
         target: 'http://localhost:3000',
@@ -41,6 +43,5 @@ export default defineConfig(({ mode }) => {
       '/getCurrentArn': 'http://localhost:3000/',
     },
   };
-
   return config;
 });
