@@ -1,5 +1,4 @@
-
-// parseJSON in Document
+//parse JSON data within a given array of segments
 const parseData = (segmentArray) => {
   const parsedDocumentData = segmentArray.map((segments) => {
     const doc = JSON.parse(segments['Document']);
@@ -9,7 +8,7 @@ const parseData = (segmentArray) => {
   return parsedDocumentData;
 };
 
-
+//create node. adjust data as needed
 function Node(segment) {
   this.id = segment.Document.id;
   this.name = segment.Document.name;
@@ -24,14 +23,14 @@ function Node(segment) {
   this.fullData = segment;
 }
 
-// creates Nodes from each segment
+// create individual node for an array of related segments
 const createAllNodes = (segmentarray) => {
   return segmentarray.map((segment) => {
     return new Node(segment);
   });
 };
 
-// create the root. Only one root in each trace
+// create root node
 const createRoot = (arr) => {
   let rootNode;
   for (let i = 0; i < arr.length; i++) {
@@ -42,6 +41,7 @@ const createRoot = (arr) => {
   return rootNode;
 };
 
+// create parent/child relationship from an array of nodes starting from root
 const addChildChildren = (tree, nodeArray) => {
   let currNode = tree;
   if (!currNode) return;
@@ -53,12 +53,6 @@ const addChildChildren = (tree, nodeArray) => {
         if (node.parent_id === subSegment.id) {
           currNode.children.push(node);
         }
-        // experimental below
-        // if (subSegment.subsegments) {
-        //   if (subSegment.subsegments[0].id === node.parent_id) {
-        //     console.log(node);
-        //   }
-        // }
         if (subSegment.subsegments) {
           if (checkForSubsegments(node, subSegment.subsegments) === true) {
             currNode.children.push(node);
@@ -72,9 +66,7 @@ const addChildChildren = (tree, nodeArray) => {
   }
 };
 
-// function will only be called if subsegment has subsegments
-// i am already checking if the node.parent_id is equal to the subsegment id
-// dont need to check for it again just pass in subsegment of subsegment
+// checks nodes subsegments for relationship between nodes if subsegment exists
 const checkForSubsegments = (node, subsegment) => {
   for (let i = 0; i < subsegment.length; i++) {
     if (node.parent_id === subsegment[i].id) return true;
@@ -92,18 +84,6 @@ const getAverageOfTrace = (nodeArray) => {
   });
   return total / nodeArray.length;
 };
-// problem
-// if a segment has a child, it might not be a subsegment,
-// but a subsegment of the subsegment
-// create a function that can recursively identify subsegment ids
-// and match them to children. if there is a match then add node to children array
-
-// check if the current subsegments id is equal to the nodeArray id
-
-// solution
-// so my function needs to check if the subsegments have an subsegments
-// go into those subsegments and check if the subsegment id is equal to the
-// parent id of the currentNode, if returned true push to the children array
 
 const main = (segment) => {
   if (!segment) return;
