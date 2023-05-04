@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"cd ./server && npm run server\" \"cd && npm run dev\"",
     "server": "node server/server.js",
-    "fulldev": "concurrently \"redis-server\" \"npx nodemon server/server.js\" \" npx vite\"",
+    "fulldev": " NODE_ENV=DEV concurrently \"redis-server\" \"npx nodemon server/server.js\" \" npx vite \"",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

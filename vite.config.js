@@ -21,7 +21,7 @@ export default defineConfig(({ mode }) => {
 
   config.server = {
     host: true,
-    port: 3000, 
+    // port: 3000, 
     proxy: {
       '/getTraces': 'http://localhost:3000/',
       '/clearTraces': 'http://localhost:3000/',

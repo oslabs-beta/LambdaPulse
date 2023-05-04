@@ -4,18 +4,16 @@ const { query } = require('../db.config.js');
 
 const awsCredentialsController = {};
 
+// retrieve user's AWS Role ARN from the database.
 awsCredentialsController.getCredentials = async (req, res, next) => {
   console.log('in getCredentials');
   if (res.locals.redisTraces != undefined) {
     return next();
   } 
   console.log('Received creds request at ' + Date.now());
-  //use this: res.locals.userId to find user's ARN
-  //SELECT user.role_ARN where user.id = res.locals.userID
+
   const roleResult = await query('SELECT role_arn FROM users WHERE _id = $1 ;', [res.locals.userId])
-  console.log('this is roleResult in AWS credentials', roleResult)
   const getRole = roleResult.rows[0].role_arn
-  console.log('this is getRole in AWS credentials', getRole)
 
   const userRoleArn = getRole;
   console.log('req body: ', req.body);
@@ -28,7 +26,7 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
     RoleArn: userRoleArn,
     RoleSessionName: 'lambdaPulseSession',
   };
-
+// assume the role specified by the Role ARN, create temp credentials
   try {
     const data = await stsClient.send(new AssumeRoleCommand(assumeRoleParams));
     const temporaryCredentials = {
@@ -38,7 +36,6 @@ awsCredentialsController.getCredentials = async (req, res, next) => {
     };
     console.log('in awsCredentialsController');
     res.locals.awsCredentials = temporaryCredentials;
-    console.log('aws creds', res.locals.awsCredentials);
     return next();
   } catch (err) {
     console.error('Error assuming role:', err);

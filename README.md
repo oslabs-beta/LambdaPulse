@@ -19,19 +19,21 @@ However, if you'd like to fork & host your own local copy of LambdaPulse, instru
 
 ### Option B: Dev Installation Instructions
 1) Git clone
-2) npm install in /
-3) npm install in /client/
+2) install redis-server via apt/brew/etc
+3) npm install in /
 4) In .env, set up the following:
     AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY
     USER_ROLE_ARN
     JWT_KEY
-
     -also a separate .env in client folder, setup VITE_CAPTCHA_KEY = "google captchav2 key"
 5) install redis-server via apt/brew/etc
+#) Update vite.config.js to change port to something other than 3000
+#) Update package.json fulldev to add NODE_ENV = dev
 6) npm run fulldev
 7) create user and enter ARN in settings
 8) refresh data
+
 
 ## How to Contribute
 

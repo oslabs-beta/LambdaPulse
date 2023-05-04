@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { query } = require('../db.config.js');
+const Redis = require('ioredis');
 
 const {
   XRayClient,
@@ -11,13 +12,18 @@ const {
   FilterLogEventsCommand,
 } = require('@aws-sdk/client-cloudwatch-logs');
 
-const Redis = require('ioredis');
+let redisClient;
 
-let redisClient = new Redis({
-  port: 6379,
-  host: 'redis',
-});
-
+if (process.env.NODE_ENV === 'DEV' || process.env.NODE_ENV === 'TEST') {
+  console.log('devmode in rediscontroller');
+  redisClient = new Redis();
+} else {
+  console.log('not devmode in rediscontroller');
+  redisClient = new Redis({
+    host: 'redis',
+    port: 6379,
+  });
+}
 redisClient.on('connect', () => {
   console.log('Connected to Redis.');
 });
@@ -190,13 +196,14 @@ const getTraceMiddleware = {
           console.error('Error fetching logs:', error);
         }
       }
+
+      // save all nodes to res.locals
       res.locals.nodes = allNodes;
+
+      // grab current userId to send a query to the DB
       const userId = res.locals.userId;
-      console.log('userId:', userId);
 
-      console.log('this is nodes', allNodes);
-
-      // inserting new traces into traces table
+      // inserting new traces into traces table. On conflict (when traces already in DB) does nothing
       try {
         const insertTraceQuery = `
         INSERT INTO traces (_id, root_node, role_arn)
@@ -212,12 +219,9 @@ const getTraceMiddleware = {
             JSON.stringify(rootNode),
             userId,
           ]);
-          if (resultTraces.rowCount > 0) {
-            console.log('Inserted trace in DB', resultTraces.rows[0]);
-          } else {
-            console.log(`Trace with id ${traceId} already exists in DB`);
-          }
         }
+
+        // deletes traces older than 7 days
         const deleteOldTracesQuery = `
         DELETE FROM traces
         WHERE role_arn = (SELECT role_arn FROM users WHERE _id = $1)
@@ -249,13 +253,10 @@ const getTraceMiddleware = {
       }
 
       try {
-        console.log('HOOBLA');
         redisClient.set('Traces', JSON.stringify(res.locals.userTraces));
-        console.log('HOOBLA PT 2');
       } catch (err) {
         next(err);
       }
-
       next();
     } catch (err) {
       next(err);
