@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NodeTree from './NodeTree';
 import NodeDetail from './NodeDetail';
 import LogPanel from './LogPanel';
 import NavBar from './NavBar';
-import LeftBar from './LeftBar';
 import TraceList from './TraceList';
 import './event-graph.css';
 

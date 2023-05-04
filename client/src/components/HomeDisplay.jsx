@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SimpleDataDisplay from './SimpleDataDisplay';
 import { PieChart } from 'react-minimal-pie-chart';
 import spinner from '../assets/pulse-1.1s-200px.svg';
-import './Homedisplay.css';
+import './HomeDisplay.css';
 
 const getStartLocale = (startSec) => {
   let start = new Date(0);
@@ -52,6 +52,38 @@ const flattenTrace = (trace) => {
   return result;
 };
 
+const traceHasErrors = (trace) => {
+  let segmentQueue = [];
+  segmentQueue.push(trace);
+  while (segmentQueue.length) {
+    let s = segmentQueue.pop();
+    s.children.forEach((segment) => segmentQueue.push(segment));
+    if (s.fullData && s.fullData.Document.error) return true;
+  }
+  return false;
+}
+
+const getFromRight = (s) => {
+  let result = '';
+  for (let i = s.length-1; i >= 0; i--) {
+    if (s[i] == '/') return result;
+      result = s[i] + result;
+    }
+  return result;
+}
+
+const uniqueFunctions = (traces) => {
+  const uniques = {};
+  for (const t in traces) {
+    if (traces[t].fullData && traces[t].fullData.Document.http.request) {
+      const u = getFromRight(traces[t].fullData.Document.http.request.url);
+      if (!uniques[u]) uniques[u] = 0;
+      uniques[u]++;
+    }
+  }
+  return uniques;
+}
+
 const tallyOrigins = (flattenedTrace) => {
   const result = {};
 
@@ -64,11 +96,6 @@ const tallyOrigins = (flattenedTrace) => {
   return result;
 };
 
-/*
-                  { title: 'One', value: 10, color: '#E38627' },
-                  { title: 'Two', value: 15, color: '#C13C37' },
-                  { title: 'Three', value: 20, color: '#6A2135' },
-*/
 const tallyToCircle = (tally) => {
   const result = [];
   const colors = ['#E38627', '#C13C37', '#6A2135'];
@@ -85,19 +112,32 @@ const tallyToCircle = (tally) => {
   return result;
 };
 
+const uniqueFunctionsToCircle = (uniqueFunctions) => {
+  const result = [];
+  const colors = ['#E38627', '#C13C37', '#6A2135'];
+  let curColor = 0;
+  for (const k in uniqueFunctions) {
+    const r = {};
+    r.title = k;
+    r.value = uniqueFunctions[k];
+    r.color = colors[curColor];
+    curColor++;
+    if (curColor >= colors.length) curColor = 0;
+    result.push(r);
+  }
+
+  return result;
+}
+
 const HomeDisplay = (props) => {
-  //invications
-  //successful
-  //errors
-  //line chart of invocations across time?
 
     const invocationCount = props.traces ? props.traces.length : 0;
     let successCount = 0;
     let errorCount = 0;
     for (const t in props.traces) {
       const n = props.traces[t];
-      if (n.http && n.http.response && n.http.response.status >= 200 && n.http.response.status < 300) successCount++;
-      else if (n.http && n.http.response && ( n.http.response.status <200 || n.http.response.status >= 300)) errorCount++;
+      if (traceHasErrors(n)) errorCount++;
+      else successCount++;
     }
 
     let sumDuration = 0;
@@ -109,19 +149,38 @@ const HomeDisplay = (props) => {
         countDuration++;
       }
     }
-    const avgDuration = sumDuration > 0 ? Math.floor(sumDuration / countDuration * 1000)/1000 : 0;
+    const avgDuration = (sumDuration > 0 ? Math.floor(sumDuration / countDuration * 1)/1 : 0) + ' ms';
   
     const origins = tallyToCircle(tallyOrigins(flattenTrace(props.traces[props.currentTrace])));
     
+    const uniqueFuncs = uniqueFunctionsToCircle(uniqueFunctions(props.traces));
     
 
     return (
         <div className={'metrics__home__container'}>
             {props.loading && (<img className='loading-spinner' src={spinner} alt='Loading' />)}
             <SimpleDataDisplay label={'Invocations'} metric={invocationCount} />
-            <SimpleDataDisplay label={'Successful'} metric={successCount} />
-            <SimpleDataDisplay label={'Errors'} metric={errorCount} />
+            <SimpleDataDisplay label={'Clean'} metric={successCount} />
+            <SimpleDataDisplay label={'With Errors'} metric={errorCount} />
             <SimpleDataDisplay label={'Avg Duration'} metric={avgDuration} />
+            <div className={'metrics__visual__display'}>
+              <PieChart
+                data={uniqueFuncs}
+                viewBoxSize={[100,100]}
+                center={[50,50]}
+                labelPosition={50}
+                lengthAngle={360}
+                lineWidth={55}
+                paddingAngle={0}
+                radius={50}
+                startAngle={0}
+                label={(props) => {return props.dataEntry.title} }
+                labelStyle={{
+                    fill: 'white',
+                    fontSize: '4px'
+               }}
+                />
+            </div>
             <div className={'metrics__visual__display'}>
               <PieChart
                 data={origins}
@@ -129,7 +188,7 @@ const HomeDisplay = (props) => {
                 center={[50,50]}
                 labelPosition={50}
                 lengthAngle={360}
-                lineWidth={35}
+                lineWidth={55}
                 paddingAngle={0}
                 radius={50}
                 startAngle={0}

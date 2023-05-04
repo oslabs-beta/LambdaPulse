@@ -8,8 +8,8 @@ import Settings from '../../components/Settings';
 import { Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import LeftBar from '../../components/LeftBar';
 import sampleTraces from '../../assets/sampleTraces.json';
+import ComingSoon from '../ComingSoon'
 
 import homeIcon from '../../assets/home-1391-svgrepo-com.svg';
 import eventGraphIcon from '../../assets/network-2-1118-svgrepo-com.svg';
@@ -17,6 +17,8 @@ import traceListIcon from '../../assets/list-svgrepo-com.svg';
 import metricsIcon from '../../assets/chart-bar-svgrepo-com.svg';
 import teamIcon from '../../assets/team-svgrepo-com.svg';
 import settingsIcon from '../../assets/settings-svgrepo-com.svg';
+import mapIcon from '../../assets/map-svgrepo-com.svg'
+import logoutIcon from '../../assets/logout-svgrepo-com.svg';
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState('Home');
@@ -25,6 +27,10 @@ const Dashboard = () => {
   const [nodeData, setNodeData] = useState(null);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [appTreeNode, setAppTreeNode] = useState({});
+  const [appLogs, setAppLogs] = useState([]);
+  const [start_value, onChangeStart] = useState(new Date()-1000*60*60*24*7);
+  const [end_value, onChangeEnd] = useState(new Date());
 
   const navigate = useNavigate();
 
@@ -62,6 +68,65 @@ const Dashboard = () => {
     setNodeData(traceList[currentTrace]);
   }, [currentTrace]);
 
+  useEffect(() => {
+    //get from right
+    const getFromRight = (s) => {
+      let result = '';
+      for (let i = s.length-1; i >= 0; i--) {
+        if (s[i] == '/') return result;
+        result = s[i] + result;
+      }
+      return result;
+    }
+    let newAppChildren = [];
+    //loop thru tracelist get endpt
+    for (let n = 0; n < traceList.length; n++) {
+      const url = traceList[n].fullData.Document.http.request.url;
+      const endpt = getFromRight(url)
+      // let errors = findErrorsInTrace(traceList[n]);
+
+      //ADDING TO APP TREE CHILDREN
+
+      let found = false;
+      // console.log(`this is trace${n} endpt`, endpt)
+      //loop thru children get endpt
+      for (let j = 0; j < newAppChildren.length; j++) {
+        let appChildrenUrl = newAppChildren[j].fullData.Document.http.request.url;
+        let appChildrenEndpt = getFromRight(appChildrenUrl)
+        // console.log(`this is appchild${j} endpt`, appChildrenEndpt)
+        if (appChildrenEndpt == endpt) {
+          found = true;
+        }
+      }
+      if (!found) {
+        // console.log('shud b adding')
+        newAppChildren.push(traceList[n]);
+      }
+    }
+    console.log('this is apptreechildren',newAppChildren);
+    let logs = [];
+    for (let i = 0; i < newAppChildren.length; i++){
+      logs=[...logs,...traceList[i].logs]
+    }
+    let client = {
+      id :'client',
+      name:'client',
+      logs: logs,
+      children: newAppChildren,
+      origin: 'client',
+      //fulldata, has .Document
+    }
+    setAppTreeNode(client);
+    //ADDING TO APP TREE CHILDREN
+    setAppLogs(logs);
+    console.log('this is logs: ', logs);
+    if (newAppChildren.length!= 0) {
+      console.log(newAppChildren[0].fullData.Document)
+
+    }
+
+  }, [traceList])
+
   function logout() {
     fetch('/logout', {
       method: 'GET',
@@ -88,6 +153,12 @@ const Dashboard = () => {
             traceLogData={traceList[currentTrace].logs}
           />
         )}
+        {currentPage === 'AppTree' && (
+          <EventGraph
+            nodeData={appTreeNode}
+            traceLogData={appLogs}
+          />
+        )}
         {currentPage === 'TraceList' && (
           <TraceList
             traces={traceList}
@@ -96,7 +167,17 @@ const Dashboard = () => {
             refresh={refresh}
             loading={loading}
             currentTrace={currentTrace}
+            start_value={start_value}
+            onChangeStart={onChangeStart}
+            end_value={end_value}
+            onChangeEnd={onChangeEnd}
           />
+        )}
+        {currentPage === 'Metrics' && (
+          <ComingSoon/>
+        )}
+        {currentPage === 'Team' && (
+          <ComingSoon/>
         )}
         {currentPage === 'Settings' && (
           <Settings/>
@@ -109,25 +190,30 @@ const Dashboard = () => {
       <NavBar />
       <div id='dashboardBody'>
         <div id='sideBar'>
-          <button onClick={() => setCurrentPage('Home')}>
+          <button onClick={() => setCurrentPage('Home')} title='Home'>
             <img src={homeIcon} width='16px'></img>
           </button>
-          <button onClick={() => setCurrentPage('EventGraph')}>
+          <button onClick={() => setCurrentPage('EventGraph')} title='Event Graph'>
             <img src={eventGraphIcon} width='16px'></img>
+          </button>
+          <button onClick={() => setCurrentPage('AppTree')}>
+            <img src={mapIcon} width='16px'></img>
           </button>
           <button onClick={() => setCurrentPage('TraceList')}>
             <img src={traceListIcon} width='16px'></img>
           </button>
-          <button onClick={() => setCurrentPage('Metrics')}>
+          <button onClick={() => setCurrentPage('Metrics')} title='Metrics'>
             <img src={metricsIcon} width='16px'></img>
           </button>
-          <button>
+          <button onClick={() => setCurrentPage('Team')} title='Team'>
             <img src={teamIcon} width='16px'></img>
           </button>
           <button onClick={() => setCurrentPage('Settings')}>
             <img src={settingsIcon} width='16px'></img>
           </button>
-          <button onClick={()=>logout()}>Logout</button>
+          <button onClick={()=>logout()} title='Logout'>
+            <img src={logoutIcon} width='16px'></img>
+          </button>
         </div>
         <div id='bodyContent'>
           <Body />

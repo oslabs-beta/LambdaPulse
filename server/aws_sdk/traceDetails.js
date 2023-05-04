@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { query } = require('../db.config.js');
+const Redis = require('ioredis');
 
 const {
   XRayClient,
@@ -10,58 +11,29 @@ const {
   CloudWatchLogsClient,
   FilterLogEventsCommand,
 } = require('@aws-sdk/client-cloudwatch-logs');
-const aws = require('aws-sdk');
 
-const Redis = require('redis');
-const redisClient = Redis.createClient();
-redisClient.connect();
+let redisClient;
+
+if (process.env.NODE_ENV === 'DEV' || process.env.NODE_ENV === 'TEST') {
+  console.log('devmode in rediscontroller');
+  redisClient = new Redis();
+} else {
+  console.log('not devmode in rediscontroller');
+  redisClient = new Redis({
+    host: 'redis',
+    port: 6379,
+  });
+}
+redisClient.on('connect', () => {
+  console.log('Connected to Redis.');
+});
+
 redisClient.on('error', (err) => {
   console.error(err);
 });
 
 const main = require('./sortingSegments');
-// const { query } = require('express');
-//redis client to add traces to redis
 
-// const awsCredentials = {
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//   region: process.env.AWS_REGION,
-// };
-
-// only needed if issues with aws cli
-// process.env.AWS_ACCESS_KEY_ID = awsCredentials.accessKeyId;
-// process.env.AWS_SECRET_ACCESS_KEY = awsCredentials.secretAccessKey;
-
-// const xClient = new XRayClient(awsCredentials);
-
-// console.log(getTraceSummary());
-
-// will return an array of traceIds.
-// getTraceSummary()
-//   .then((result) => {
-//     console.log(result);
-//     const traceArr = result.TraceSummaries;
-//     const traceIds = traceArr.map((node) => {
-//       return node.Id;
-//     });
-//     return traceIds;
-//   })
-//   .catch((err) => {
-//     console.log(err, 'err in getTraceSummary');
-//   });
-
-//below will give you the subsegments for each traceId
-
-// getTraceDetails(traceId)
-//   .then((result) => {
-//     console.log(result.Traces[0].Segments);
-//   })
-//   .catch((err) => {
-//     console.log(err, ' in gettracedetails');
-//   });
-
-console.log('out of get logs');
 const getTraceMiddleware = {
   getSummary: async (req, res, next) => {
     if (res.locals.redisTraces != undefined) return next();
@@ -224,19 +196,14 @@ const getTraceMiddleware = {
           console.error('Error fetching logs:', error);
         }
       }
-      res.locals.nodes = allNodes;
-      const userId = res.locals.userId;
-      console.log('userId:', userId);
 
-      console.log('this is nodes', allNodes);
-      try {
-        console.log('HOOBLA');
-        redisClient.set('Traces', JSON.stringify(allNodes));
-        console.log('HOOBLA PT 2');
-      } catch (err) {
-        next(err);
-      }
-      // inserting new traces into traces table
+      // save all nodes to res.locals
+      res.locals.nodes = allNodes;
+
+      // grab current userId to send a query to the DB
+      const userId = res.locals.userId;
+
+      // inserting new traces into traces table. On conflict (when traces already in DB) does nothing
       try {
         const insertTraceQuery = `
         INSERT INTO traces (_id, root_node, role_arn)
@@ -252,12 +219,9 @@ const getTraceMiddleware = {
             JSON.stringify(rootNode),
             userId,
           ]);
-          if (resultTraces.rowCount > 0) {
-            console.log('Inserted trace in DB', resultTraces.rows[0]);
-          } else {
-            console.log(`Trace with id ${traceId} already exists in DB`);
-          }
         }
+
+        // deletes traces older than 7 days
         const deleteOldTracesQuery = `
         DELETE FROM traces
         WHERE role_arn = (SELECT role_arn FROM users WHERE _id = $1)
@@ -288,6 +252,11 @@ const getTraceMiddleware = {
         next(err);
       }
 
+      try {
+        redisClient.set('Traces', JSON.stringify(res.locals.userTraces));
+      } catch (err) {
+        next(err);
+      }
       next();
     } catch (err) {
       next(err);
