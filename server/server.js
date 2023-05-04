@@ -1,9 +1,6 @@
 const express = require('express');
 const PORT = process.env.PORT || '3000';
 app = express();
-const express = require('express');
-const PORT = process.env.PORT || '3000';
-app = express();
 const cors = require('cors');
 const userController = require('./controllers/userController');
 const redisController = require('./controllers/redisController');
@@ -12,9 +9,6 @@ const getTraceMiddleware = require('./aws_sdk/traceDetails');
 const jwtController = require('./controllers/jwtController');
 const cookieParser = require('cookie-parser');
 const { query } = require('./db.config.js');
-const path = require('path');
-
-app.use(express.static(path.join(__dirname, '../dist')));
 const path = require('path');
 
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -66,7 +60,6 @@ app.get('/getCurrentArn', jwtController.verifyJwt, async (req, res) => {
   );
   res.status(200).send(currentArn);
 });
-});
 
 // route to set user ARN in DB
 app.post('/setUserARN', jwtController.verifyJwt, async (req, res) => {
@@ -82,17 +75,10 @@ app.post('/setUserARN', jwtController.verifyJwt, async (req, res) => {
     ]);
   } catch (err) {
     console.log('Error setting roleARN', err);
-    await query('UPDATE users SET role_arn = $1 WHERE _id = $2 ;', [
-      userARN,
-      userId,
-    ]);
-  } catch (err) {
-    console.log('Error setting roleARN', err);
   }
   res.status(200).send({ success: 'User ARN successfully added!' });
 });
-  res.status(200).send({ success: 'User ARN successfully added!' });
-});
+
 
 // route to get the temp credentials, grab traces from SDK and pass to frontend
 app.get(
@@ -121,7 +107,6 @@ app.get('/about', (req, res) => {
 });
 
 //Route not found
-app.use((req, res, err) => {
 app.use((req, res, err) => {
   console.log(err);
   res.sendStatus(404);
