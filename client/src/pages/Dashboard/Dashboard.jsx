@@ -8,8 +8,8 @@ import Settings from '../../components/Settings';
 import { Route, Routes } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import LeftBar from '../../components/LeftBar';
 import sampleTraces from '../../assets/sampleTraces.json';
+import ComingSoon from '../ComingSoon'
 
 import homeIcon from '../../assets/home-1391-svgrepo-com.svg';
 import eventGraphIcon from '../../assets/network-2-1118-svgrepo-com.svg';
@@ -173,6 +173,12 @@ const Dashboard = () => {
             onChangeEnd={onChangeEnd}
           />
         )}
+        {currentPage === 'Metrics' && (
+          <ComingSoon/>
+        )}
+        {currentPage === 'Team' && (
+          <ComingSoon/>
+        )}
         {currentPage === 'Settings' && (
           <Settings/>
         )}
@@ -199,7 +205,7 @@ const Dashboard = () => {
           <button onClick={() => setCurrentPage('Metrics')} title='Metrics'>
             <img src={metricsIcon} width='16px'></img>
           </button>
-          <button title='Team'>
+          <button onClick={() => setCurrentPage('Team')} title='Team'>
             <img src={teamIcon} width='16px'></img>
           </button>
           <button onClick={() => setCurrentPage('Settings')}>
