@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const { query } = require('../db.config.js');
 const jwt = require('jsonwebtoken');
 
-// Creation of user using PostgresSQL
+// create user using PostgresSQL
 
 const createUser = async (req, res, next) => {
   const { fullName, email, password } = req.body;
@@ -37,6 +37,8 @@ const createUser = async (req, res, next) => {
     return next(error);
   }
 };
+
+// verify user using PostgresSQL
 
 const verifyUser = async (req, res, next) => {
   const { email, password } = req.body;

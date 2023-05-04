@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// handle CORS
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -28,30 +29,30 @@ app.use(function (req, res, next) {
   next();
 });
 
+// route to create user in DB
 app.post(
   '/createUser',
   userController.createUser,
   jwtController.createJwt,
   (req, res) => {
-    console.log('in create user');
     res.sendStatus(201);
   }
 );
 
+// route to verify user in DB and create JWT
 app.post(
   '/verifyUser',
   userController.verifyUser,
   jwtController.createJwt,
   (req, res) => {
-    //successful login
-    // res.redirect('homepage');
     res.sendStatus(200);
   }
 );
 
+// route to logout
 app.get('/logout', redisController.clearTraces, userController.logout);
 
-
+// route to retrieve user's ARN from DB
 app.get('/getCurrentArn', jwtController.verifyJwt, async (req, res) => {
   const currentArn = await query(
     'SELECT role_arn FROM users WHERE _id = $1 ; ',
@@ -60,10 +61,12 @@ app.get('/getCurrentArn', jwtController.verifyJwt, async (req, res) => {
   res.status(200).send(currentArn);
 });
 
+// route to set user ARN in DB
 app.post('/setUserARN', jwtController.verifyJwt, async (req, res) => {
   console.log('in Set User ARN');
   const { userARN } = req.body;
   const userId = res.locals.userId;
+  console.log(userId);
   console.log(userId);
   try {
     await query('UPDATE users SET role_arn = $1 WHERE _id = $2 ;', [
@@ -76,6 +79,8 @@ app.post('/setUserARN', jwtController.verifyJwt, async (req, res) => {
   res.status(200).send({ success: 'User ARN successfully added!' });
 });
 
+
+// route to get the temp credentials, grab traces from SDK and pass to frontend
 app.get(
   '/getTraces',
   jwtController.verifyJwt,
@@ -90,14 +95,21 @@ app.get(
   }
 );
 
-app.get('/clearTraces', redisController.clearTraces, (req, res) => {
-  res.sendStatus(200);
+// routes to access pages on refresh or through link
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
-
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+});
 
 //Route not found
 app.use((req, res, err) => {
   console.log(err);
+  res.sendStatus(404);
   res.sendStatus(404);
 });
 

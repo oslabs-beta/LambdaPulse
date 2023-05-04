@@ -1,10 +1,17 @@
 const Redis = require('ioredis');
 
-let redisClient = new Redis({
-  port: 6379,
-  host: 'redis',
-});
+let redisClient;
 
+if (process.env.NODE_ENV === 'DEV' || process.env.NODE_ENV === 'TEST') {
+  console.log('devmode in rediscontroller');
+  redisClient = new Redis();
+} else {
+  console.log('not devmode in rediscontroller');
+  redisClient = new Redis({
+    host: 'redis',
+    port: 6379,
+  });
+}
 redisClient.on('connect', () => {
   console.log('Connected to Redis.');
 });
@@ -12,7 +19,6 @@ redisClient.on('connect', () => {
 redisClient.on('error', (err) => {
   console.error(err);
 });
-
 
 const getRedisTraces = async (req, res, next) => {
   //Set TableName

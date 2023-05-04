@@ -29,7 +29,7 @@ const Signup = () => {
       password,
       fullName,
     };
-    console.log(userData);
+
     fetch('/createUser', {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
@@ -95,14 +95,18 @@ const Signup = () => {
           required
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-        <div>
+        <div className='captcha'>
           <Reaptcha
             sitekey={import.meta.env.VITE_CAPTCHA_KEY}
             onVerify={() => setCaptcha('passed')}
             required
           />
         </div>
-        <button className='login-btn' type='submit'>
+        <button
+          className='login-btn'
+          type='submit'
+          style={{ marginTop: '20px' }}
+        >
           Sign Up
         </button>
 
@@ -118,5 +122,4 @@ const Signup = () => {
     </div>
   );
 };
-
 export default Signup;
